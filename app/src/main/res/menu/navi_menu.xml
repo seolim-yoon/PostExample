@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/item_home"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:icon="@drawable/baseline_home_24"
+        android:title="Home"/>
+
+    <item
+        android:id="@+id/item_postadd"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:icon="@drawable/baseline_post_add_24"
+        android:title="Post Add"/>
+
+    <item
+        android:id="@+id/item_info"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:icon="@drawable/baseline_person_24"
+        android:title="User Info"/>
+</menu>
