@@ -1,15 +1,15 @@
-package com.example.postexample.view.activity
+package com.example.postexample.ui.view.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.example.postexample.R
 import com.example.postexample.databinding.ActivitySignupBinding
-import com.example.postexample.viewmodel.LogInViewModel
+import com.example.postexample.ui.viewmodel.LogInResult
+import com.example.postexample.ui.viewmodel.LogInViewModel
 import org.jetbrains.anko.toast
 
 class SignUpActivity: AppCompatActivity() {
@@ -25,14 +25,14 @@ class SignUpActivity: AppCompatActivity() {
     }
 
     fun init() {
-        loginViewModel.completeSignUp.observe(this, Observer {
-            when (it) {
-                "success" -> {
+        loginViewModel.completeSignUp.observe(this, Observer { result ->
+            when (result) {
+                LogInResult.SUCCESS -> {
                     startActivity(Intent(this, LoginActivity::class.java))
                     finish()
                     toast("회원가입이 완료 되었습니다!")
                 }
-                "fail" -> {
+                LogInResult.FAIL -> {
                     toast("회원가입 실패 하였습니다.")
                 }
             }

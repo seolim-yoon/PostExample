@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FollowExample">
 
-        <activity android:name="com.example.postexample.view.activity.LoginActivity"
+        <activity android:name="com.example.postexample.ui.view.activity.LoginActivity"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,11 +20,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.example.postexample.view.activity.MainActivity"
+        <activity android:name="com.example.postexample.ui.view.activity.MainActivity"
             android:launchMode="singleInstance">
         </activity>
 
-        <activity android:name="com.example.postexample.view.activity.SignUpActivity">
+        <activity android:name="com.example.postexample.ui.view.activity.SignUpActivity">
         </activity>
     </application>
 </manifest>

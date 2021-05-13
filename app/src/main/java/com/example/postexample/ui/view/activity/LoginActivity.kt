@@ -1,4 +1,4 @@
-package com.example.postexample.view.activity
+package com.example.postexample.ui.view.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.example.postexample.R
 import com.example.postexample.databinding.ActivityLoginBinding
-import com.example.postexample.viewmodel.LogInViewModel
+import com.example.postexample.ui.viewmodel.LogInResult
+import com.example.postexample.ui.viewmodel.LogInViewModel
 import org.jetbrains.anko.toast
 
 class LoginActivity: AppCompatActivity() {
@@ -24,14 +25,14 @@ class LoginActivity: AppCompatActivity() {
     }
 
     fun init() {
-        loginViewModel.completeLogIn.observe(this, Observer {
-            when(it) {
-                "success" -> {
+        loginViewModel.completeLogIn.observe(this, Observer { result ->
+            when(result) {
+                LogInResult.SUCCESS -> {
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                     toast("환영합니다!")
                 }
-                "fail" -> {
+                LogInResult.FAIL -> {
                     toast("아이디 또는 비밀번호를 확인해주세요.")
                 }
             }

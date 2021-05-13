@@ -1,4 +1,4 @@
-package com.example.postexample.view.fragment
+package com.example.postexample.ui.view.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.postexample.R
 
-class HomdFragment: Fragment() {
+class UserInfoFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_user_info, container, false)
     }
 }
