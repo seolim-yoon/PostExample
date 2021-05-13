@@ -15,6 +15,7 @@ class LogInViewModel : BaseViewModel() {
 
     var completeSignUp: MutableLiveData<LogInResult> = MutableLiveData()
     var completeLogIn: MutableLiveData<LogInResult> = MutableLiveData()
+    var userState: MutableLiveData<UserState> = MutableLiveData()
 
     var isLoading: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -42,12 +43,18 @@ class LogInViewModel : BaseViewModel() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         completeLogIn.value = LogInResult.SUCCESS
+                        userState.value = UserState.LOGIN
                         hideLoadingBar()
                     }, {
                         completeLogIn.value = LogInResult.FAIL
                         hideLoadingBar()
                     })
         )
+    }
+
+    fun doLogOut() {
+        repository.doLogOut()
+        userState.value = UserState.LOGOUT
     }
 
     fun showLoadingBar() {
@@ -59,7 +66,12 @@ class LogInViewModel : BaseViewModel() {
     }
 }
 
-enum class LogInResult(val state: String) {
+enum class UserState(val state: String) {
+    LOGIN("Login"),
+    LOGOUT("Logout");
+}
+
+enum class LogInResult(val result: String) {
     SUCCESS("Success"),
     FAIL("Fail");
 }

@@ -10,6 +10,7 @@ import com.example.postexample.R
 import com.example.postexample.databinding.ActivityLoginBinding
 import com.example.postexample.ui.viewmodel.LogInResult
 import com.example.postexample.ui.viewmodel.LogInViewModel
+import com.example.postexample.util.preference.LoginPreference
 import org.jetbrains.anko.toast
 
 class LoginActivity: AppCompatActivity() {
@@ -23,14 +24,16 @@ class LoginActivity: AppCompatActivity() {
         binding.lifecycleOwner = this
 
         init()
+        if(LoginPreference.getAutoLogin()) {
+            startMainActivity()
+        }
     }
 
     fun init() {
         loginViewModel.completeLogIn.observe(this, Observer { result ->
             when(result) {
                 LogInResult.SUCCESS -> {
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                    startMainActivity()
                     toast("환영합니다!")
                 }
                 LogInResult.FAIL -> {
@@ -42,5 +45,10 @@ class LoginActivity: AppCompatActivity() {
         binding.btnSignup.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
         }
+    }
+
+    fun startMainActivity() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 }

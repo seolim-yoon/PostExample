@@ -1,11 +1,11 @@
 package com.example.postexample.data.repository
 
 import android.util.Log
+import com.example.postexample.util.preference.LoginPreference
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.rxjava3.core.Single
-import kotlin.math.sin
 
 class DataBaseRepository() {
     private val firebaseAuth = FirebaseAuth.getInstance()
@@ -38,6 +38,7 @@ class DataBaseRepository() {
             firebaseAuth.signInWithEmailAndPassword(email, pw)
                 .addOnCompleteListener { task ->
                     task.takeIf { it.isSuccessful() }?.let {
+                        LoginPreference.setUserPreference(email, pw)
                         singleEmitter.onSuccess(task.result)
                     } ?: run {
                         Log.e("seolim", "" + task.exception)
@@ -45,4 +46,9 @@ class DataBaseRepository() {
                     }
                 }
         }
+
+    fun doLogOut() {
+        firebaseAuth.signOut()
+        LoginPreference.setAutoLogin(false)
+    }
 }
