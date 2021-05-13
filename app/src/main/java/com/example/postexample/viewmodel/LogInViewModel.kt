@@ -1,35 +1,45 @@
 package com.example.postexample.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.postexample.data.repository.DataBaseRepository
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class LogInViewModel: ViewModel() {
+class LogInViewModel : ViewModel() {
     private val repository = DataBaseRepository()
 
     var name: MutableLiveData<String> = MutableLiveData()
     var email: MutableLiveData<String> = MutableLiveData()
     var pw: MutableLiveData<String> = MutableLiveData()
 
-    var completeSignUp: MutableLiveData<String> = MutableLiveData()
-    var completeLogIn: MutableLiveData<String> = MutableLiveData()
+    var completeSignUp: MutableLiveData<LoginResult> = MutableLiveData()
+    var completeLogIn: MutableLiveData<LoginResult> = MutableLiveData()
 
     fun doSignUp(name: String, email: String, pw: String) {
-        repository.doSignUp(name, email, pw).let {
-            when(it) {
-                true -> completeSignUp.value = "success"
-                false -> completeSignUp.value = "fail"
-            }
-        }
+        repository.doSignUp(name, email, pw)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                completeSignUp.value = LoginResult.SUCCESS
+            }, {
+                completeSignUp.value = LoginResult.FAIL
+            })
     }
 
     fun doLogIn(email: String, pw: String) {
-        repository.doLogIn(email, pw).let {
-            when(it) {
-                true -> completeLogIn.value = "success"
-                false -> completeLogIn.value = "fail"
-            }
-        }
+        repository.doLogIn(email, pw)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                completeLogIn.value = LoginResult.SUCCESS
+            }, {
+                completeLogIn.value = LoginResult.FAIL
+            })
     }
+}
+
+enum class LoginResult(val state: String) {
+    SUCCESS("Success"),
+    FAIL("Fail");
 }
