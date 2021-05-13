@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.postexample.data.repository.DataBaseRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class LogInViewModel : ViewModel() {
@@ -16,26 +17,37 @@ class LogInViewModel : ViewModel() {
     var completeSignUp: MutableLiveData<LoginResult> = MutableLiveData()
     var completeLogIn: MutableLiveData<LoginResult> = MutableLiveData()
 
+    private val disposable = CompositeDisposable()
+
     fun doSignUp(name: String, email: String, pw: String) {
-        repository.doSignUp(name, email, pw)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                completeSignUp.value = LoginResult.SUCCESS
-            }, {
-                completeSignUp.value = LoginResult.FAIL
-            })
+        disposable.add(
+            repository.doSignUp(name, email, pw)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    completeSignUp.value = LoginResult.SUCCESS
+                }, {
+                    completeSignUp.value = LoginResult.FAIL
+                })
+        )
     }
 
     fun doLogIn(email: String, pw: String) {
-        repository.doLogIn(email, pw)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                completeLogIn.value = LoginResult.SUCCESS
-            }, {
-                completeLogIn.value = LoginResult.FAIL
-            })
+        disposable.add(
+            repository.doLogIn(email, pw)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    completeLogIn.value = LoginResult.SUCCESS
+                }, {
+                    completeLogIn.value = LoginResult.FAIL
+                })
+        )
+    }
+
+    override fun onCleared() {
+        disposable.clear()
+        super.onCleared()
     }
 }
 
