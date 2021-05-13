@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewmodel"
             type="com.example.postexample.ui.viewmodel.LogInViewModel" />
@@ -86,5 +87,14 @@
             app:layout_constraintTop_toBottomOf="@id/btn_login"
             app:layout_constraintEnd_toEndOf="@id/btn_login"/>
 
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewmodel.isLoading ? View.VISIBLE : View.GONE, default = gone}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

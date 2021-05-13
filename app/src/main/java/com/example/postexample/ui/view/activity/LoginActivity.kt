@@ -20,6 +20,7 @@ class LoginActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.viewmodel = loginViewModel
+        binding.lifecycleOwner = this
 
         init()
     }

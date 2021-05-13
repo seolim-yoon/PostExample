@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewmodel"
             type="com.example.postexample.ui.viewmodel.LogInViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
@@ -94,6 +96,16 @@
             app:layout_constraintStart_toStartOf="@id/tv_signup_title"
             app:layout_constraintEnd_toEndOf="@id/et_pw"
             android:onClick="@{() -> viewmodel.doSignUp(viewmodel.name, viewmodel.email, viewmodel.pw)}"/>
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewmodel.isLoading ? View.VISIBLE : View.GONE, default = gone}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

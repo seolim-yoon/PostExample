@@ -1,7 +1,6 @@
 package com.example.postexample.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.postexample.data.repository.DataBaseRepository
 import com.example.postexample.ui.base.BaseViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -17,30 +16,46 @@ class LogInViewModel : BaseViewModel() {
     var completeSignUp: MutableLiveData<LogInResult> = MutableLiveData()
     var completeLogIn: MutableLiveData<LogInResult> = MutableLiveData()
 
+    var isLoading: MutableLiveData<Boolean> = MutableLiveData()
+
     fun doSignUp(name: String, email: String, pw: String) {
+        showLoadingBar()
         addDisposable(
             repository.doSignUp(name, email, pw)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         completeSignUp.value = LogInResult.SUCCESS
+                        hideLoadingBar()
                     }, {
                         completeSignUp.value = LogInResult.FAIL
+                        hideLoadingBar()
                     })
         )
     }
 
     fun doLogIn(email: String, pw: String) {
+        showLoadingBar()
         addDisposable(
             repository.doLogIn(email, pw)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         completeLogIn.value = LogInResult.SUCCESS
+                        hideLoadingBar()
                     }, {
                         completeLogIn.value = LogInResult.FAIL
+                        hideLoadingBar()
                     })
         )
+    }
+
+    fun showLoadingBar() {
+        isLoading.value = true
+    }
+
+    fun hideLoadingBar() {
+        isLoading.value = false
     }
 }
 
