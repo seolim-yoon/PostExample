@@ -23,13 +23,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        initNavigationBar()
+        init()
     }
 
-    fun initNavigationBar() {
+    fun init() {
+        setSupportActionBar(binding.tbAppTitle)
+
         binding.bnMenu.run {
-            setOnNavigationItemSelectedListener {
-                when(it.itemId) {
+            setOnNavigationItemSelectedListener { menuitem ->
+                when(menuitem.itemId) {
                     R.id.item_home -> replaceFragment(homeFragment)
                     R.id.item_postadd -> replaceFragment(postAddFragment)
                     R.id.item_info -> replaceFragment(userInfoFragment)
