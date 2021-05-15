@@ -1,13 +1,13 @@
 package com.example.postexample.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.example.postexample.data.repository.DataBaseRepository
+import com.example.postexample.data.repository.LoginRepository
 import com.example.postexample.ui.base.BaseViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class LogInViewModel : BaseViewModel() {
-    private val repository = DataBaseRepository()
+    private val repository = LoginRepository()
 
     var name: MutableLiveData<String> = MutableLiveData()
     var email: MutableLiveData<String> = MutableLiveData()

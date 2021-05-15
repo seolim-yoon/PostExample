@@ -11,4 +11,7 @@
     <string name="title_home">Home</string>
     <string name="title_post_add">Post Add</string>
     <string name="title_user_info">User Info</string>
+    <string name="edit_input_title">제목을 입력해주세요.</string>
+    <string name="edit_input_content">내용을 입력해주세요.</string>
+    <string name="upload_post">올리기</string>
 </resources>

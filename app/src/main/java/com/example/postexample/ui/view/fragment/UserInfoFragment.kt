@@ -32,7 +32,7 @@ class UserInfoFragment: Fragment() {
     }
 
     fun initView() {
-        loginViewModel.userState.observe(this, Observer { result ->
+        loginViewModel.userState.observe(viewLifecycleOwner, Observer { result ->
             when(result) {
                 UserState.LOGOUT -> {
                     startActivity(Intent(context, LoginActivity::class.java))

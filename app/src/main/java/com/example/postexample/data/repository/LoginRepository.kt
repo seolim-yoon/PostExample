@@ -7,10 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.rxjava3.core.Single
 
-class DataBaseRepository() {
-    private val firebaseAuth = FirebaseAuth.getInstance()
-    private val databaseReference =  FirebaseDatabase.getInstance().reference
-
+class LoginRepository: BaseRepository() {
     fun doSignUp(name: String, email: String, pw: String): Single<AuthResult> =
         Single.create { singleEmitter ->
             firebaseAuth.createUserWithEmailAndPassword(email, pw)
@@ -23,7 +20,10 @@ class DataBaseRepository() {
                                 "pw" to pw
                             )
 
-                            databaseReference.child(firebaseAuth.currentUser?.uid ?: "").setValue(userMap)
+                            databaseReference
+                                    .child("User")
+                                    .push()
+                                    .setValue(userMap)
                             singleEmitter.onSuccess(result)
                         } ?: run {
                             Log.e("seolim", "" + exception)
