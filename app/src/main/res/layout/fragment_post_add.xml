@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewmodel"
             type="com.example.postexample.ui.viewmodel.PostViewModel" />
@@ -58,7 +59,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_post_content"
-            android:onClick="@{() -> viewmodel.createPost(viewmodel.url, viewmodel.title, viewmodel.content)}"/>
+            android:onClick="@{() -> viewmodel.createPost(viewmodel.uri, viewmodel.title, viewmodel.content)}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

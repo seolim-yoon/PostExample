@@ -9,10 +9,10 @@ import com.example.postexample.model.PostInfo
 
 class PostListAdapter(private val context: Context?,
                       var postItemClick: (PostInfo) -> Unit
-) : RecyclerView.Adapter<PostListAdapter.VideoListHolder>() {
-    private var postInfo: List<PostInfo> = listOf()
+) : RecyclerView.Adapter<PostListAdapter.PostListHolder>() {
+    private var postList: ArrayList<PostInfo> = arrayListOf()
 
-    inner class VideoListHolder(private val binding: LayoutPostListBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class PostListHolder(private val binding: LayoutPostListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(info: PostInfo) {
             binding.postinfo = info
 
@@ -21,19 +21,29 @@ class PostListAdapter(private val context: Context?,
                 binding.invalidateAll()
             }
         }
+
+
+
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoListHolder
-            = VideoListHolder(LayoutPostListBinding.inflate(LayoutInflater.from(context), parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostListHolder
+            = PostListHolder(LayoutPostListBinding.inflate(LayoutInflater.from(context), parent, false))
 
-    override fun onBindViewHolder(holder: VideoListHolder, position: Int) {
-        holder.bind(postInfo[position])
+    override fun onBindViewHolder(holder: PostListHolder, position: Int) {
+        holder.bind(postList[position])
     }
 
-    override fun getItemCount(): Int = postInfo.size
+    override fun getItemCount(): Int = postList.size
 
-    fun setPostInfo(postinfo: List<PostInfo>) {
-        this.postInfo = postinfo;
+    fun addPostInfo(info: PostInfo) {
+        if(!postList.contains(info)) {
+            postList.add(info)
+        }
+        notifyDataSetChanged()
+    }
+
+    fun clear() {
+        postList.clear()
         notifyDataSetChanged()
     }
 }

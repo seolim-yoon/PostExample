@@ -6,18 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.postexample.R
 import com.example.postexample.databinding.FragmentUserInfoBinding
+import com.example.postexample.ui.base.BaseFragment
 import com.example.postexample.ui.view.activity.LoginActivity
-import com.example.postexample.ui.viewmodel.LogInViewModel
 import com.example.postexample.ui.viewmodel.UserState
 
-class UserInfoFragment: Fragment() {
+class UserInfoFragment: BaseFragment() {
     private lateinit var binding: FragmentUserInfoBinding
-    private val loginViewModel: LogInViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,12 +23,10 @@ class UserInfoFragment: Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_user_info, container, false)
         binding.viewmodel = loginViewModel
-
-        initView()
         return binding.root
     }
 
-    fun initView() {
+    override fun initView() {
         loginViewModel.userState.observe(viewLifecycleOwner, Observer { result ->
             when(result) {
                 UserState.LOGOUT -> {

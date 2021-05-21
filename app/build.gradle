@@ -59,6 +59,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0-alpha01'
     implementation 'com.google.firebase:firebase-auth:20.0.0'
     implementation 'com.google.firebase:firebase-database:19.7.0'
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.12'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 

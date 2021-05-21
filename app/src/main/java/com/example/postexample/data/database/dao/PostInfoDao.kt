@@ -5,16 +5,16 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.postexample.data.database.entity.User
+import com.example.postexample.data.database.entity.Post
 
 @Dao
-interface UserInfoDao {
-    @Query("SELECT * FROM user")
-    fun getAll(): LiveData<List<User>>
+interface PostInfoDao {
+    @Query("SELECT * FROM post")
+    fun getAllPost(): LiveData<List<Post>>
 
     @Insert
-    fun insert(video: User)
+    fun insert(post: Post)
 
     @Delete
-    fun delete(video: User)
+    fun delete(post: Post)
 }

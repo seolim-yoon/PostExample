@@ -1,12 +1,16 @@
 package com.example.postexample.ui.viewmodel
 
+import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.postexample.data.repository.LoginRepository
+import com.example.postexample.model.PostInfo
+import com.example.postexample.model.UserInfo
 import com.example.postexample.ui.base.BaseViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class LogInViewModel : BaseViewModel() {
+class LogInViewModel(application: Application) : BaseViewModel(application) {
     private val repository = LoginRepository()
 
     var name: MutableLiveData<String> = MutableLiveData()
@@ -16,8 +20,9 @@ class LogInViewModel : BaseViewModel() {
     var completeSignUp: MutableLiveData<LogInResult> = MutableLiveData()
     var completeLogIn: MutableLiveData<LogInResult> = MutableLiveData()
     var userState: MutableLiveData<UserState> = MutableLiveData()
-
-    var isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    var getUserInfo: MutableLiveData<ResultState> = MutableLiveData()
+    var userHashMap: MutableLiveData<HashMap<String, String>> = MutableLiveData()
+    var userInfo: MutableLiveData<UserInfo> = MutableLiveData()
 
     fun doSignUp(name: String, email: String, pw: String) {
         showLoadingBar()
@@ -57,12 +62,25 @@ class LogInViewModel : BaseViewModel() {
         userState.value = UserState.LOGOUT
     }
 
-    fun showLoadingBar() {
-        isLoading.value = true
-    }
+    fun getUserInfo() {
+        addDisposable(
+                repository.getUserInfo()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            it.children.forEach {
+                                val user = it.getValue() as HashMap<String, String>
+                                userInfo.value = UserInfo(user["name"], user["email"], user["pw"])
 
-    fun hideLoadingBar() {
-        isLoading.value = false
+                                Log.v("seolim", "key : " + it.key)
+                                Log.v("seolim", "value : " + (it.getValue() as HashMap<String, String>).toString())
+                            }
+                            getUserInfo.value = ResultState.SUCCESS
+
+                        }, {
+                            getUserInfo.value = ResultState.FAIL
+                        })
+        )
     }
 }
 

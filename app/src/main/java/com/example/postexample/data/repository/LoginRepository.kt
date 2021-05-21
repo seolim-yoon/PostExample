@@ -3,11 +3,14 @@ package com.example.postexample.data.repository
 import android.util.Log
 import com.example.postexample.util.preference.LoginPreference
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import io.reactivex.rxjava3.core.Single
 
 class LoginRepository: BaseRepository() {
+    var user = databaseReference.child("User")
+
     fun doSignUp(name: String, email: String, pw: String): Single<AuthResult> =
         Single.create { singleEmitter ->
             firebaseAuth.createUserWithEmailAndPassword(email, pw)
@@ -51,4 +54,17 @@ class LoginRepository: BaseRepository() {
         firebaseAuth.signOut()
         LoginPreference.setAutoLogin(false)
     }
+
+    fun getUserInfo() : Single<DataSnapshot> =
+            Single.create { singleEmitter ->
+                user.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        singleEmitter.onSuccess(snapshot)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        singleEmitter.onError(error.toException())
+                    }
+                })
+            }
 }

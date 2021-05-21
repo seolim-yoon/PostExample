@@ -2,7 +2,6 @@ package com.example.postexample.util.preference
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 
 object PreferenceManager {
     private lateinit var preference: SharedPreferences

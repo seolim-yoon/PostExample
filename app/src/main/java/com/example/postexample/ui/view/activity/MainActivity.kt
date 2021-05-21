@@ -2,21 +2,27 @@ package com.example.postexample.ui.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.postexample.R
 import com.example.postexample.databinding.ActivityMainBinding
 import com.example.postexample.ui.view.fragment.PostAddFragment
-import com.example.postexample.ui.view.fragment.HomdFragment
+import com.example.postexample.ui.view.fragment.HomeFragment
 import com.example.postexample.ui.view.fragment.UserInfoFragment
+import com.example.postexample.ui.viewmodel.LogInViewModel
+import com.example.postexample.ui.viewmodel.PostViewModel
 import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {
     private val TIME_INTERVAL = 2000
     private var backKeyPressedTime = 0L
-    private val homeFragment by lazy { HomdFragment() }
+    private val homeFragment by lazy { HomeFragment() }
     private val postAddFragment by lazy { PostAddFragment() }
     private val userInfoFragment by lazy { UserInfoFragment() }
+
+    private val postViewModel: PostViewModel by viewModels()
+    private val loginViewModel: LogInViewModel by viewModels()
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     fun init() {
         setSupportActionBar(binding.tbAppTitle)
+
 
         binding.bnMenu.run {
             setOnNavigationItemSelectedListener { menuitem ->
