@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     fun init() {
         setSupportActionBar(binding.tbAppTitle)
 
-
         binding.bnMenu.run {
             setOnNavigationItemSelectedListener { menuitem ->
                 when(menuitem.itemId) {

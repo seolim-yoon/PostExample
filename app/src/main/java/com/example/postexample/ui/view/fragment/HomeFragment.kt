@@ -1,5 +1,6 @@
 package com.example.postexample.ui.view.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,14 +12,22 @@ import com.example.postexample.R
 import com.example.postexample.databinding.FragmentHomeBinding
 import com.example.postexample.model.UserInfo
 import com.example.postexample.ui.base.BaseFragment
+import com.example.postexample.ui.view.activity.PostDetailActivity
+import com.example.postexample.ui.view.activity.SignUpActivity
 import com.example.postexample.ui.view.adapter.PostListAdapter
 
 class HomeFragment: BaseFragment() {
     private lateinit var binding: FragmentHomeBinding
     private val postListAdapter by lazy {
-        PostListAdapter(context) {
-            // TODO : post list click listener
-
+        PostListAdapter(context) { postInfo ->
+            activity?.let {
+                val intent = Intent(context, PostDetailActivity::class.java).apply {
+                    putExtra("url", postInfo.uri)
+                    putExtra("title", postInfo.title)
+                    putExtra("content", postInfo.content)
+                }
+                startActivity(intent)
+            }
         }
     }
 

@@ -29,5 +29,8 @@
 
         <activity android:name="com.example.postexample.ui.view.activity.SignUpActivity">
         </activity>
+
+        <activity android:name="com.example.postexample.ui.view.activity.PostDetailActivity">
+        </activity>
     </application>
 </manifest>
