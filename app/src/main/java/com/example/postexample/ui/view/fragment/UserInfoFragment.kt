@@ -35,7 +35,6 @@ class UserInfoFragment: BaseFragment() {
                 }
                 UserState.LOGIN -> {
                     // TODO : 로그인 된 상태 = 사용자 정보 띄우기
-
                 }
             }
         })
