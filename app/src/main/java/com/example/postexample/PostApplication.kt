@@ -2,7 +2,7 @@ package com.example.postexample
 
 import android.app.Application
 import android.util.Log
-import com.example.postexample.util.preference.PreferenceManager
+import com.example.postexample.util.PreferenceManager
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import java.io.IOException

@@ -25,6 +25,7 @@ class HomeFragment: BaseFragment() {
                     putExtra("url", postInfo.uri)
                     putExtra("title", postInfo.title)
                     putExtra("content", postInfo.content)
+                    putExtra("date", postInfo.date)
                 }
                 startActivity(intent)
             }

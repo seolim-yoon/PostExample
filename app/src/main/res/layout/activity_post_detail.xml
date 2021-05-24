@@ -24,7 +24,7 @@
         <ImageView
             android:id="@+id/iv_post_img"
             android:layout_width="0dp"
-            android:layout_height="360dp"
+            android:layout_height="350dp"
             android:padding="10dp"
             app:imageUrl="@{postinfo.uri}"
             app:layout_constraintTop_toBottomOf="@id/tb_post_detail"
@@ -36,11 +36,24 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:textStyle="bold"
+            android:textSize="17sp"
             android:text="@={postinfo.title}"
-            android:inputType="text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_post_img"/>
+
+        <TextView
+            android:id="@+id/tv_post_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@={postinfo.date}"
+            android:textSize="11sp"
+            android:textColor="@color/gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_post_title"/>
 
         <TextView
             android:id="@+id/tv_post_content"
@@ -48,12 +61,11 @@
             android:layout_height="0dp"
             android:padding="10dp"
             android:text="@={postinfo.content}"
-            android:inputType="text"
             android:scrollbars="vertical"
             android:gravity="top"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_post_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_post_date"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

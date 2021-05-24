@@ -1,7 +1,7 @@
 package com.example.postexample.data.repository
 
 import android.util.Log
-import com.example.postexample.util.preference.LoginPreference
+import com.example.postexample.util.LoginPreference
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

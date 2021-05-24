@@ -1,4 +1,4 @@
-package com.example.postexample.util.preference
+package com.example.postexample.util
 
 object LoginPreference {
 

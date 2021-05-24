@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import com.example.postexample.data.database.dao.PostInfoDao
 import com.example.postexample.data.database.database.AppDatabase
 import com.example.postexample.data.database.entity.Post
+import com.example.postexample.util.TimeFormatUtils
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -37,7 +38,8 @@ class PostRepository(application: Application): BaseRepository() {
                                         var postMap = hashMapOf(
                                                 "url" to downloadUrl.toString(),
                                                 "title" to title,
-                                                "content" to content
+                                                "content" to content,
+                                                "date" to TimeFormatUtils.stringTime
                                         )
 
                                         databaseReference

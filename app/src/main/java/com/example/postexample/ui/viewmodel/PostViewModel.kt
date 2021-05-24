@@ -70,7 +70,7 @@ class PostViewModel(application: Application): BaseViewModel(application) {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ uri ->
-                    postInfo.value = PostInfo(uri.toString(), post["title"], post["content"])
+                    postInfo.value = PostInfo(uri.toString(), post["title"], post["content"], post["date"])
                 }, {
 
                 })

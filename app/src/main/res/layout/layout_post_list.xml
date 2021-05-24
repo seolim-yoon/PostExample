@@ -44,6 +44,17 @@
             app:layout_constraintLeft_toRightOf="@id/iv_post_img"
             app:layout_constraintBottom_toBottomOf="@id/iv_post_img"/>
 
+
+        <TextView
+            android:id="@+id/tv_post_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{postinfo.date}"
+            android:textColor="@color/gray"
+            android:layout_margin="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
         <Button
             android:id="@+id/btn_follow"
             android:layout_width="wrap_content"

@@ -1,4 +1,4 @@
-package com.example.postexample.util.preference
+package com.example.postexample.util
 
 import android.content.Context
 import android.content.SharedPreferences

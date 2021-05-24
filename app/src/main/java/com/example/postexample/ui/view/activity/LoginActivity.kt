@@ -10,7 +10,7 @@ import com.example.postexample.R
 import com.example.postexample.databinding.ActivityLoginBinding
 import com.example.postexample.ui.viewmodel.LogInResult
 import com.example.postexample.ui.viewmodel.LogInViewModel
-import com.example.postexample.util.preference.LoginPreference
+import com.example.postexample.util.LoginPreference
 import org.jetbrains.anko.toast
 
 class LoginActivity: AppCompatActivity() {
