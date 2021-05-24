@@ -21,9 +21,6 @@ class PostListAdapter(private val context: Context?,
                 binding.invalidateAll()
             }
         }
-
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostListHolder
