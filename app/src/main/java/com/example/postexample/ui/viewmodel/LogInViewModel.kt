@@ -2,7 +2,10 @@ package com.example.postexample.ui.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.postexample.data.database.entity.Post
+import com.example.postexample.data.database.entity.User
 import com.example.postexample.data.repository.LoginRepository
 import com.example.postexample.model.PostInfo
 import com.example.postexample.model.UserInfo
@@ -11,7 +14,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class LogInViewModel(application: Application) : BaseViewModel(application) {
-    private val repository = LoginRepository()
+    val loginRepository = LoginRepository(application)
 
     var name: MutableLiveData<String> = MutableLiveData()
     var email: MutableLiveData<String> = MutableLiveData()
@@ -20,14 +23,11 @@ class LogInViewModel(application: Application) : BaseViewModel(application) {
     var completeSignUp: MutableLiveData<LogInResult> = MutableLiveData()
     var completeLogIn: MutableLiveData<LogInResult> = MutableLiveData()
     var userState: MutableLiveData<UserState> = MutableLiveData()
-    var getUserInfo: MutableLiveData<ResultState> = MutableLiveData()
-    var userHashMap: MutableLiveData<HashMap<String, String>> = MutableLiveData()
-    var userInfo: MutableLiveData<UserInfo> = MutableLiveData()
 
     fun doSignUp(name: String, email: String, pw: String) {
         showLoadingBar()
         addDisposable(
-            repository.doSignUp(name, email, pw)
+            loginRepository.doSignUp(name, email, pw)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
@@ -43,12 +43,13 @@ class LogInViewModel(application: Application) : BaseViewModel(application) {
     fun doLogIn(email: String, pw: String) {
         showLoadingBar()
         addDisposable(
-            repository.doLogIn(email, pw)
+            loginRepository.doLogIn(email, pw)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
+                    .subscribe({ result ->
                         completeLogIn.value = LogInResult.SUCCESS
                         userState.value = UserState.LOGIN
+
                         hideLoadingBar()
                     }, {
                         completeLogIn.value = LogInResult.FAIL
@@ -58,29 +59,8 @@ class LogInViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun doLogOut() {
-        repository.doLogOut()
+        loginRepository.doLogOut()
         userState.value = UserState.LOGOUT
-    }
-
-    fun getUserInfo() {
-        addDisposable(
-                repository.getUserInfo()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            it.children.forEach {
-                                val user = it.getValue() as HashMap<String, String>
-                                userInfo.value = UserInfo(user["name"], user["email"], user["pw"])
-
-                                Log.v("seolim", "key : " + it.key)
-                                Log.v("seolim", "value : " + (it.getValue() as HashMap<String, String>).toString())
-                            }
-                            getUserInfo.value = ResultState.SUCCESS
-
-                        }, {
-                            getUserInfo.value = ResultState.FAIL
-                        })
-        )
     }
 }
 

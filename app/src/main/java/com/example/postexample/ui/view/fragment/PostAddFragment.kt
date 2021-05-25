@@ -6,6 +6,7 @@ import android.graphics.Color.TRANSPARENT
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,15 +31,16 @@ class PostAddFragment: BaseFragment() {
         postViewModel.clickImage.value = false
         with(result) {
             takeIf { resultCode == Activity.RESULT_OK }?.let {
-                val uri = data?.data
+                data?.data.run {
+                    context?.let { context ->
+                        Glide.with(context)
+                            .load(this)
+                            .error(R.drawable.baseline_warning_24)
+                            .into(binding.ivPostImg)
+                    }
 
-                context?.let {
-                    Glide.with(it)
-                        .load(uri)
-                        .into(binding.ivPostImg)
+                    postViewModel.uri.value = this.toString()
                 }
-
-                postViewModel.uri.value = uri.toString()
             }
         }
     }

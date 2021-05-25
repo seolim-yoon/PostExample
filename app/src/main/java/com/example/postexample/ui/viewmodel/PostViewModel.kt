@@ -8,9 +8,11 @@ import com.example.postexample.model.PostInfo
 import com.example.postexample.ui.base.BaseViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class PostViewModel(application: Application): BaseViewModel(application) {
-    private val repository = PostRepository(application)
+    val postRepository = PostRepository(application)
 
     var uri: MutableLiveData<String> = MutableLiveData()
     var title: MutableLiveData<String> = MutableLiveData()
@@ -27,7 +29,7 @@ class PostViewModel(application: Application): BaseViewModel(application) {
     fun createPost(uri: String, title: String, content: String) {
         showLoadingBar()
         addDisposable(
-            repository.createPost(uri, title, content)
+            postRepository.createPost(uri, title, content)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -48,13 +50,12 @@ class PostViewModel(application: Application): BaseViewModel(application) {
 
     fun refreshPost() {
         addDisposable(
-            repository.refreshPost()
+            postRepository.refreshPost()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     it.children.forEach {
                         loadImageURL(it.getValue() as HashMap<String, String>)
-
                         Log.i("seolim", "key : " + it.key ?: "")
                         Log.i("seolim", "value : " + (it.getValue() as HashMap<String, String>).toString())
                     }
@@ -66,11 +67,15 @@ class PostViewModel(application: Application): BaseViewModel(application) {
 
     fun loadImageURL(post: HashMap<String, String>) {
         addDisposable(
-            repository.loadImageURL(post["title"] ?: "")
+            postRepository.loadImageURL(post["title"] ?: "")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ uri ->
-                    postInfo.value = PostInfo(uri.toString(), post["title"], post["content"], post["date"])
+                    postInfo.value = PostInfo(uri.toString(),
+                                                    post["title"],
+                                                    post["content"],
+                                                    post["name"],
+                                                    post["date"])
                 }, {
 
                 })

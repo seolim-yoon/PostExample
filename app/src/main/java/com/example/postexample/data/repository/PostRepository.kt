@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import com.example.postexample.data.database.dao.PostInfoDao
 import com.example.postexample.data.database.database.AppDatabase
 import com.example.postexample.data.database.entity.Post
+import com.example.postexample.data.database.entity.User
+import com.example.postexample.util.LoginPreference
 import com.example.postexample.util.TimeFormatUtils
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -14,13 +16,14 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
-class PostRepository(application: Application): BaseRepository() {
-    private val appDatabase = AppDatabase.getInstance(application)!!
+class PostRepository(application: Application): BaseRepository(application) {
     private val postDao: PostInfoDao = appDatabase.postInfoDao()
     private val posts: LiveData<List<Post>> = postDao.getAllPost()
-
-    var post = databaseReference.child("Post")
+    private var post = databaseReference.child("Post")
 
     fun getAllPost(): LiveData<List<Post>> {
         return posts
@@ -39,9 +42,16 @@ class PostRepository(application: Application): BaseRepository() {
                                                 "url" to downloadUrl.toString(),
                                                 "title" to title,
                                                 "content" to content,
+                                                "name" to LoginPreference.getUserName(),
                                                 "date" to TimeFormatUtils.stringTime
                                         )
 
+                                        // Room DB
+                                        GlobalScope.launch {
+                                            postDao.insert(Post(uri, title, content, LoginPreference.getUserName(), TimeFormatUtils.stringTime))
+                                        }
+
+                                        // Firebase RealTime DB
                                         databaseReference
                                                 .child("Post")
                                                 .push()
@@ -56,8 +66,8 @@ class PostRepository(application: Application): BaseRepository() {
                         }
         }
 
-    fun deletePost(url: String, title: String, content: String) {
-        postDao.delete(Post(url, title, content))
+    fun deletePost(url: String, title: String, content: String, name: String, date: String) {
+        postDao.delete(Post(url, title, content, name, date))
     }
 
     fun loadImageURL(title: String) : Single<Uri> =
@@ -68,7 +78,6 @@ class PostRepository(application: Application): BaseRepository() {
                 .downloadUrl
                 .addOnSuccessListener { uri ->
                     singleEmitter.onSuccess(uri)
-
                 }.addOnFailureListener { error ->
                     singleEmitter.onError(error)
                 }

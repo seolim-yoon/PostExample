@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "post")
 data class Post(var url: String,
                 var title: String,
-                var content: String) {
+                var content: String,
+                var name: String,
+                var date: String) {
     @PrimaryKey(autoGenerate = true) var id: Int = 0
 }

@@ -5,6 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.postexample.data.database.entity.User
+import com.example.postexample.data.repository.LoginRepository
+import com.example.postexample.data.repository.PostRepository
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 
@@ -12,7 +15,7 @@ open class BaseViewModel(application: Application): AndroidViewModel(application
     private val compositeDisposable = CompositeDisposable()
     var isLoading: MutableLiveData<Boolean> = MutableLiveData()
 
-    fun addDisposable(disposable: Disposable) {
+    open fun addDisposable(disposable: Disposable) {
         compositeDisposable.add(disposable)
     }
 
@@ -21,11 +24,11 @@ open class BaseViewModel(application: Application): AndroidViewModel(application
         super.onCleared()
     }
 
-    fun showLoadingBar() {
+    open fun showLoadingBar() {
         isLoading.value = true
     }
 
-    fun hideLoadingBar() {
+    open fun hideLoadingBar() {
         isLoading.value = false
     }
 }

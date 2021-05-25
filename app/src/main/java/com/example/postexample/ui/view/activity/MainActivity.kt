@@ -21,9 +21,6 @@ class MainActivity : AppCompatActivity() {
     private val postAddFragment by lazy { PostAddFragment() }
     private val userInfoFragment by lazy { UserInfoFragment() }
 
-    private val postViewModel: PostViewModel by viewModels()
-    private val loginViewModel: LogInViewModel by viewModels()
-
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

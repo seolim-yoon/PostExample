@@ -6,11 +6,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.postexample.R
 import com.example.postexample.databinding.ActivityLoginBinding
 import com.example.postexample.ui.viewmodel.LogInResult
 import com.example.postexample.ui.viewmodel.LogInViewModel
 import com.example.postexample.util.LoginPreference
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.toast
 
 class LoginActivity: AppCompatActivity() {
@@ -24,6 +26,7 @@ class LoginActivity: AppCompatActivity() {
         binding.lifecycleOwner = this
 
         init()
+
         if(LoginPreference.getAutoLogin()) {
             startMainActivity()
         }
@@ -34,7 +37,7 @@ class LoginActivity: AppCompatActivity() {
             when(result) {
                 LogInResult.SUCCESS -> {
                     startMainActivity()
-                    toast("환영합니다!")
+                    toast("${LoginPreference.getUserName()}님 환영합니다!")
                 }
                 LogInResult.FAIL -> {
                     toast("아이디 또는 비밀번호를 확인해주세요.")
