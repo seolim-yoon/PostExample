@@ -16,10 +16,10 @@ interface UserInfoDao {
     suspend fun getCurrentUser(email: String): User
 
     @Insert
-    fun insert(user: User)
+    suspend fun insert(user: User)
 
     @Delete
-    fun delete(user: User)
+    suspend fun delete(user: User)
 
     @Query("DELETE FROM user WHERE email = :email")
     fun deleteUserByEmail(email: String): Int

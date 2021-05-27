@@ -5,9 +5,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.postexample.data.database.dao.PostInfoDao
-import com.example.postexample.data.database.database.AppDatabase
 import com.example.postexample.data.database.entity.Post
-import com.example.postexample.data.database.entity.User
 import com.example.postexample.util.LoginPreference
 import com.example.postexample.util.TimeFormatUtils
 import com.google.firebase.database.DataSnapshot
@@ -16,9 +14,10 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.util.*
 
 class PostRepository(application: Application): BaseRepository(application) {
     private val postDao: PostInfoDao = appDatabase.postInfoDao()
@@ -43,13 +42,8 @@ class PostRepository(application: Application): BaseRepository(application) {
                                                 "title" to title,
                                                 "content" to content,
                                                 "name" to LoginPreference.getUserName(),
-                                                "date" to TimeFormatUtils.stringTime
+                                                "date" to TimeFormatUtils.dateFormat.format(Date(System.currentTimeMillis()))
                                         )
-
-                                        // Room DB
-                                        GlobalScope.launch {
-                                            postDao.insert(Post(uri, title, content, LoginPreference.getUserName(), TimeFormatUtils.stringTime))
-                                        }
 
                                         // Firebase RealTime DB
                                         databaseReference
@@ -65,10 +59,6 @@ class PostRepository(application: Application): BaseRepository(application) {
                                     }
                         }
         }
-
-    fun deletePost(url: String, title: String, content: String, name: String, date: String) {
-        postDao.delete(Post(url, title, content, name, date))
-    }
 
     fun loadImageURL(title: String) : Single<Uri> =
         Single.create { singleEmitter ->
@@ -96,4 +86,12 @@ class PostRepository(application: Application): BaseRepository(application) {
                 }
             })
         }
+
+    suspend fun insertPost(url: String, title: String, content: String, name: String, date: String) {
+        postDao.insert(Post(url, title, content, name, date))
+    }
+
+    suspend fun deletePost(url: String, title: String, content: String, name: String, date: String) {
+        postDao.delete(Post(url, title, content, name, date))
+    }
 }

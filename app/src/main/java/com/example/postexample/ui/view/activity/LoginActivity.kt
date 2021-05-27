@@ -6,13 +6,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.example.postexample.R
 import com.example.postexample.databinding.ActivityLoginBinding
 import com.example.postexample.ui.viewmodel.LogInResult
 import com.example.postexample.ui.viewmodel.LogInViewModel
 import com.example.postexample.util.LoginPreference
-import kotlinx.coroutines.launch
 import org.jetbrains.anko.toast
 
 class LoginActivity: AppCompatActivity() {

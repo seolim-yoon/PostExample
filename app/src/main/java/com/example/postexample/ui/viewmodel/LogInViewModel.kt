@@ -1,17 +1,18 @@
 package com.example.postexample.ui.viewmodel
 
 import android.app.Application
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.postexample.data.database.entity.Post
-import com.example.postexample.data.database.entity.User
+import androidx.lifecycle.viewModelScope
 import com.example.postexample.data.repository.LoginRepository
-import com.example.postexample.model.PostInfo
-import com.example.postexample.model.UserInfo
 import com.example.postexample.ui.base.BaseViewModel
+import com.example.postexample.util.LoginPreference
+import com.example.postexample.util.TimeFormatUtils
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.util.*
 
 class LogInViewModel(application: Application) : BaseViewModel(application) {
     val loginRepository = LoginRepository(application)
@@ -32,6 +33,9 @@ class LogInViewModel(application: Application) : BaseViewModel(application) {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         completeSignUp.value = LogInResult.SUCCESS
+                        viewModelScope.launch {
+                            loginRepository.insertUser(name, email, pw)
+                        }
                         hideLoadingBar()
                     }, {
                         completeSignUp.value = LogInResult.FAIL
@@ -49,7 +53,9 @@ class LogInViewModel(application: Application) : BaseViewModel(application) {
                     .subscribe({ result ->
                         completeLogIn.value = LogInResult.SUCCESS
                         userState.value = UserState.LOGIN
-
+                        viewModelScope.launch {
+                            LoginPreference.setUserPreference(loginRepository.getCurrentUser().name ?: "", email, pw)
+                        }
                         hideLoadingBar()
                     }, {
                         completeLogIn.value = LogInResult.FAIL

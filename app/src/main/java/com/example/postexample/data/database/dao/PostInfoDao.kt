@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.postexample.data.database.entity.Post
+import java.util.concurrent.Flow
 
 @Dao
 interface PostInfoDao {
@@ -13,8 +14,8 @@ interface PostInfoDao {
     fun getAllPost(): LiveData<List<Post>>
 
     @Insert
-    fun insert(post: Post)
+    suspend fun insert(post: Post)
 
     @Delete
-    fun delete(post: Post)
+    suspend fun delete(post: Post)
 }

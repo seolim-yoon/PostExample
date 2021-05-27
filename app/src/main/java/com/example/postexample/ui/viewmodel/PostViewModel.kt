@@ -3,13 +3,17 @@ package com.example.postexample.ui.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.postexample.data.repository.PostRepository
 import com.example.postexample.model.PostInfo
 import com.example.postexample.ui.base.BaseViewModel
+import com.example.postexample.util.LoginPreference
+import com.example.postexample.util.TimeFormatUtils
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.HashMap
 
 class PostViewModel(application: Application): BaseViewModel(application) {
     val postRepository = PostRepository(application)
@@ -34,6 +38,9 @@ class PostViewModel(application: Application): BaseViewModel(application) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     uploadState.value = ResultState.SUCCESS
+                    viewModelScope.launch {
+                        postRepository.insertPost(uri, title, content, LoginPreference.getUserName(), TimeFormatUtils.dateFormat.format(Date(System.currentTimeMillis())))
+                    }
                     refreshPost()
                     hideLoadingBar()
 
