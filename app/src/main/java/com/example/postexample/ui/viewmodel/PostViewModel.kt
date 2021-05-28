@@ -63,7 +63,6 @@ class PostViewModel(application: Application): BaseViewModel(application) {
                 .subscribe({
                     it.children.forEach {
                         loadImageURL(it.getValue() as HashMap<String, String>)
-                        Log.i("seolim", "key : " + it.key ?: "")
                         Log.i("seolim", "value : " + (it.getValue() as HashMap<String, String>).toString())
                     }
                 }, {

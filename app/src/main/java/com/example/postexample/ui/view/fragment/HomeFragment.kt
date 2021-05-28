@@ -42,7 +42,11 @@ class HomeFragment: BaseFragment() {
 
     override fun initView() {
         binding.rvPostList.layoutManager = GridLayoutManager(context, 1)
-        binding.rvPostList.adapter = postListAdapter
+        binding.rvPostList.adapter = postListAdapter.apply {
+            takeIf { !hasObservers() }?.let {
+                setHasStableIds(true)
+            }
+        }
 
         postViewModel.refreshPost()
         postViewModel.postInfo.observe(viewLifecycleOwner, Observer { postinfo ->

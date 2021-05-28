@@ -5,68 +5,75 @@
             name="postinfo"
             type="com.example.postexample.model.PostInfo" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@drawable/bg_post_list"
-        android:layout_margin="5dp">
+        android:background="@color/white"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="15dp">
 
-        <ImageView
-            android:id="@+id/iv_post_img"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_margin="10dp"
-            app:imageUrl="@{postinfo.uri}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_post_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:textStyle="bold"
-            android:text="@{postinfo.title}"
-            app:layout_constraintTop_toTopOf="@id/iv_post_img"
-            app:layout_constraintLeft_toRightOf="@id/iv_post_img"
-            app:layout_constraintBottom_toTopOf="@id/tv_post_content"/>
+            <ImageView
+                android:id="@+id/iv_post_img"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_margin="10dp"
+                app:imageUrl="@{postinfo.uri}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
-            android:id="@+id/tv_post_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="@{postinfo.name}"
-            app:layout_constraintTop_toBottomOf="@id/tv_post_title"
-            app:layout_constraintLeft_toRightOf="@id/iv_post_img"
-            app:layout_constraintBottom_toBottomOf="@id/iv_post_img"/>
+            <TextView
+                android:id="@+id/tv_post_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textStyle="bold"
+                android:text="@{postinfo.title}"
+                app:layout_constraintTop_toTopOf="@id/iv_post_img"
+                app:layout_constraintLeft_toRightOf="@id/iv_post_img"
+                app:layout_constraintBottom_toTopOf="@id/tv_post_content"/>
+
+            <TextView
+                android:id="@+id/tv_post_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@{postinfo.name}"
+                app:layout_constraintTop_toBottomOf="@id/tv_post_title"
+                app:layout_constraintLeft_toRightOf="@id/iv_post_img"
+                app:layout_constraintBottom_toBottomOf="@id/iv_post_img"/>
 
 
-        <TextView
-            android:id="@+id/tv_post_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{postinfo.date}"
-            android:textColor="@color/gray"
-            android:layout_margin="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            <TextView
+                android:id="@+id/tv_post_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{postinfo.date}"
+                android:textColor="@color/gray"
+                android:layout_margin="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <Button
-            android:id="@+id/btn_follow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Follow"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:background="#1638F6"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:tag="follow"
-            android:visibility="gone"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/btn_follow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Follow"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:background="#1638F6"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:tag="follow"
+                android:visibility="gone"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
 </layout>
