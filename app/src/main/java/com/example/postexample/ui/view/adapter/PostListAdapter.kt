@@ -11,7 +11,7 @@ import java.util.*
 class PostListAdapter(
         private val context: Context?,
         var postItemClick: (PostInfo) -> Unit,
-        var deleteItemClick: (PostInfo) -> Unit
+        var deleteItemClick: (Int, PostInfo) -> Unit
 ) : RecyclerView.Adapter<PostListAdapter.PostListHolder>() {
     private var postList: ArrayList<PostInfo> = arrayListOf()
 
@@ -26,8 +26,7 @@ class PostListAdapter(
             }
 
             binding.deleteView.setOnClickListener {
-                deleteItemClick(info)
-                remove(position)
+                deleteItemClick(position, info)
             }
             binding.invalidateAll()
         }
@@ -49,7 +48,6 @@ class PostListAdapter(
     override fun getItemCount(): Int = postList.size
 
     override fun getItemId(position: Int): Long = postList.get(position).toString().hashCode().toLong()
-
 
     fun addPostInfo(info: PostInfo) {
         if(!postList.contains(info)) {

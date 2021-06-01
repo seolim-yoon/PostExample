@@ -16,6 +16,6 @@ interface PostInfoDao {
     @Insert
     suspend fun insert(post: Post)
 
-    @Delete
-    suspend fun delete(post: Post)
+    @Query("DELETE FROM post WHERE url = :url")
+    suspend fun deletePostByURL(url: String)
 }

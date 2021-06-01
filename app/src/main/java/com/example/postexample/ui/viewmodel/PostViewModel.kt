@@ -25,6 +25,7 @@ class PostViewModel(application: Application): BaseViewModel(application) {
     var clickImage: MutableLiveData<Boolean> = MutableLiveData()
     var postInfo: MutableLiveData<PostInfo> = MutableLiveData()
     var uploadState: MutableLiveData<ResultState> = MutableLiveData()
+    var deletePosition: MutableLiveData<Int> = MutableLiveData()
 
     fun clickImageBtn() {
         clickImage.value = true
@@ -48,6 +49,22 @@ class PostViewModel(application: Application): BaseViewModel(application) {
                     uploadState.value = ResultState.FAIL
                     hideLoadingBar()
                 })
+        )
+    }
+
+    fun removePost(position: Int, uri: String, title: String) {
+        addDisposable(
+                postRepository.removePost(position, title)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ position ->
+                            deletePosition.value = position
+                            viewModelScope.launch {
+                                postRepository.deletePost(uri)
+                            }
+                        }, {
+
+                        })
         )
     }
 

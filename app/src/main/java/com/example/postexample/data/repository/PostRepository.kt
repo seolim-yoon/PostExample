@@ -24,6 +24,8 @@ class PostRepository(application: Application): BaseRepository(application) {
     private val posts: LiveData<List<Post>> = postDao.getAllPost()
     private var post = databaseReference.child("Post")
 
+    private var uidList = arrayListOf<String>()
+
     fun getAllPost(): LiveData<List<Post>> {
         return posts
     }
@@ -60,7 +62,7 @@ class PostRepository(application: Application): BaseRepository(application) {
                         }
             }
 
-    fun removePost(uri: String, title: String, content: String): Single<Void> =
+    fun removePost(position: Int, title: String): Single<Int> =
             Single.create { singleEmitter->
                 FirebaseStorage.getInstance()
                         .getReferenceFromUrl("gs://postexamp.appspot.com")
@@ -69,14 +71,18 @@ class PostRepository(application: Application): BaseRepository(application) {
                         .run {
                             delete()
                                     .addOnSuccessListener { task ->
-                                        singleEmitter.onSuccess(task)
+
+                                        databaseReference
+                                                .child("Content")
+                                                .child(uidList.get(position))
+                                                .removeValue()
+
+                                        singleEmitter.onSuccess(position)
                                     }
                                     .addOnFailureListener { exception ->
-
-
+                                        singleEmitter.onError(exception)
                                     }
                         }
-
             }
 
     fun loadImageURL(title: String) : Single<Uri> =
@@ -96,6 +102,10 @@ class PostRepository(application: Application): BaseRepository(application) {
         Single.create { singleEmitter ->
             post.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    uidList.clear()
+                    snapshot.children.forEach {
+                        uidList.add(it.key ?: "")
+                    }
                     singleEmitter.onSuccess(snapshot)
                 }
 
@@ -110,7 +120,7 @@ class PostRepository(application: Application): BaseRepository(application) {
         postDao.insert(Post(url, title, content, name, date))
     }
 
-    suspend fun deletePost(url: String, title: String, content: String, name: String, date: String) {
-        postDao.delete(Post(url, title, content, name, date))
+    suspend fun deletePost(url: String) {
+        postDao.deletePostByURL(url)
     }
 }
