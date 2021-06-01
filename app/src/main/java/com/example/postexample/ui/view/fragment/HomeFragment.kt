@@ -7,17 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.postexample.R
 import com.example.postexample.databinding.FragmentHomeBinding
 import com.example.postexample.ui.base.BaseFragment
 import com.example.postexample.ui.view.activity.PostDetailActivity
 import com.example.postexample.ui.view.adapter.PostListAdapter
+import com.example.postexample.util.ItemDecoration
+import com.example.postexample.util.SwipeHelperCallback
 
 class HomeFragment: BaseFragment() {
     private lateinit var binding: FragmentHomeBinding
     private val postListAdapter by lazy {
-        PostListAdapter(context) { postInfo ->
+        PostListAdapter(context, { postInfo ->
             activity?.let {
                 val intent = Intent(context, PostDetailActivity::class.java).apply {
                     putExtra("url", postInfo.uri)
@@ -28,7 +31,9 @@ class HomeFragment: BaseFragment() {
                 }
                 startActivity(intent)
             }
-        }
+        }, { postInfo ->
+            postViewModel.deletePost()
+        })
     }
 
     override fun onCreateView(
@@ -41,16 +46,28 @@ class HomeFragment: BaseFragment() {
     }
 
     override fun initView() {
-        binding.rvPostList.layoutManager = GridLayoutManager(context, 1)
+        val swipeHelperCallback = SwipeHelperCallback().apply {
+            setClamp(200f)
+        }
+        ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(binding.rvPostList)
+
+        binding.rvPostList.layoutManager = LinearLayoutManager(context)
         binding.rvPostList.adapter = postListAdapter.apply {
             takeIf { !hasObservers() }?.let {
                 setHasStableIds(true)
             }
         }
+        binding.rvPostList.addItemDecoration(ItemDecoration())
+        binding.rvPostList.setOnTouchListener { _, _ ->
+            swipeHelperCallback.removePreviousClamp(binding.rvPostList)
+            false
+        }
 
-        postViewModel.refreshPost()
-        postViewModel.postInfo.observe(viewLifecycleOwner, Observer { postinfo ->
-            postListAdapter.addPostInfo(postinfo)
-        })
+        with(postViewModel) {
+            refreshPost()
+            postInfo.observe(viewLifecycleOwner, Observer { postinfo ->
+                postListAdapter.addPostInfo(postinfo)
+            })
+        }
     }
 }

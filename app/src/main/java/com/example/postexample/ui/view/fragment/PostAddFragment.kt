@@ -57,29 +57,31 @@ class PostAddFragment: BaseFragment() {
     override fun initView() {
         loadingProgressDialog?.window?.setBackgroundDrawable(ColorDrawable(TRANSPARENT))
 
-        postViewModel.clickImage.value = false
-        postViewModel.clickImage.observe(viewLifecycleOwner, Observer { result ->
-            result.takeIf { it == true }?.let {
-                var intent = Intent(Intent.ACTION_PICK).apply {
-                    type = MediaStore.Images.Media.CONTENT_TYPE
-                    type = "image/*"
+        with(postViewModel) {
+            clickImage.value = false
+            clickImage.observe(viewLifecycleOwner, Observer { result ->
+                result.takeIf { it == true }?.let {
+                    var intent = Intent(Intent.ACTION_PICK).apply {
+                        type = MediaStore.Images.Media.CONTENT_TYPE
+                        type = "image/*"
+                    }
+                    startActivityResult.launch(intent)
                 }
-                startActivityResult.launch(intent)
-            }
-        })
+            })
 
-        postViewModel.uploadState.observe(viewLifecycleOwner, Observer { result ->
-            when (result) {
-                ResultState.SUCCESS -> Toast.makeText(context, "업로드 성공", Toast.LENGTH_SHORT).show()
-                ResultState.FAIL -> Toast.makeText(context, "업로드 실패", Toast.LENGTH_SHORT).show()
-            }
-        })
+            uploadState.observe(viewLifecycleOwner, Observer { result ->
+                when (result) {
+                    ResultState.SUCCESS -> Toast.makeText(context, "업로드 성공", Toast.LENGTH_SHORT).show()
+                    ResultState.FAIL -> Toast.makeText(context, "업로드 실패", Toast.LENGTH_SHORT).show()
+                }
+            })
 
-        postViewModel.isLoading.observe(viewLifecycleOwner, Observer { result ->
-            when (result) {
-                true -> loadingProgressDialog?.show()
-                false -> loadingProgressDialog?.dismiss()
-            }
-        })
+            isLoading.observe(viewLifecycleOwner, Observer { result ->
+                when (result) {
+                    true -> loadingProgressDialog?.show()
+                    false -> loadingProgressDialog?.dismiss()
+                }
+            })
+        }
     }
 }

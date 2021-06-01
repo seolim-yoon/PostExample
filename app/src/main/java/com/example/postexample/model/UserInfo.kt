@@ -2,6 +2,5 @@ package com.example.postexample.model
 
 data class UserInfo(
         var name: String?,
-        var email: String?,
-        var password: String?
+        var email: String?
 )

@@ -78,6 +78,10 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxjava:3.0.12'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
+    // paging
+    implementation 'androidx.paging:paging-runtime:3.0.0-alpha01'
+
+
     kapt 'androidx.room:room-compiler:2.1.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -58,7 +58,26 @@ class PostRepository(application: Application): BaseRepository(application) {
                                         singleEmitter.onError(exception)
                                     }
                         }
-        }
+            }
+
+    fun removePost(uri: String, title: String, content: String): Single<Void> =
+            Single.create { singleEmitter->
+                FirebaseStorage.getInstance()
+                        .getReferenceFromUrl("gs://postexamp.appspot.com")
+                        .child("post/")
+                        .child("img_${title}.jpg")
+                        .run {
+                            delete()
+                                    .addOnSuccessListener { task ->
+                                        singleEmitter.onSuccess(task)
+                                    }
+                                    .addOnFailureListener { exception ->
+
+
+                                    }
+                        }
+
+            }
 
     fun loadImageURL(title: String) : Single<Uri> =
         Single.create { singleEmitter ->

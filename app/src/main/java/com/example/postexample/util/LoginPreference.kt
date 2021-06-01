@@ -9,6 +9,7 @@ object LoginPreference {
     }
 
     fun getUserName() = PreferenceManager.getString("user_name", "-")
+    fun getUserEmail() = PreferenceManager.getString("user_email", "-")
 
     fun setUserPreference(name: String, email: String, pw: String) {
         PreferenceManager.setBoolean("auto_login", true)
