@@ -12,13 +12,13 @@ import com.example.postexample.ui.view.fragment.UserInfoFragment
 import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     private val TIME_INTERVAL = 2000
     private var backKeyPressedTime = 0L
     private val homeFragment by lazy { HomeFragment() }
     private val postAddFragment by lazy { PostAddFragment() }
     private val userInfoFragment by lazy { UserInfoFragment() }
 
-    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -26,9 +26,8 @@ class MainActivity : AppCompatActivity() {
         init()
     }
 
-    fun init() {
+    private fun init() {
         setSupportActionBar(binding.tbAppTitle)
-
         binding.bnMenu.run {
             setOnNavigationItemSelectedListener { menuitem ->
                 when(menuitem.itemId) {
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun replaceFragment(fragment: Fragment) {
+    private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fl_container, fragment)

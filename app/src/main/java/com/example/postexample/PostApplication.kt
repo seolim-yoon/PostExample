@@ -41,5 +41,4 @@ class PostApplication: Application() {
              Log.w("seolim", error)
          }
     }
-
 }

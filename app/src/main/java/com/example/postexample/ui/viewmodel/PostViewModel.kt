@@ -16,7 +16,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 class PostViewModel(application: Application): BaseViewModel(application) {
-    val postRepository = PostRepository(application)
+    private val postRepository = PostRepository(application)
 
     var uri: MutableLiveData<String> = MutableLiveData()
     var title: MutableLiveData<String> = MutableLiveData()

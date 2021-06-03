@@ -25,7 +25,7 @@ class SignUpActivity: AppCompatActivity() {
         init()
     }
 
-    fun init() {
+    private fun init() {
         loginViewModel.completeSignUp.observe(this, Observer { result ->
             when (result) {
                 LogInResult.SUCCESS -> {

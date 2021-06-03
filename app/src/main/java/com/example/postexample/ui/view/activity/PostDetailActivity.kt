@@ -18,7 +18,7 @@ class PostDetailActivity: AppCompatActivity() {
         init()
     }
 
-    fun init() {
+    private fun init() {
         binding.postinfo = PostInfo(intent.getStringExtra("url"),
                 intent.getStringExtra("title"),
                 intent.getStringExtra("content"),
