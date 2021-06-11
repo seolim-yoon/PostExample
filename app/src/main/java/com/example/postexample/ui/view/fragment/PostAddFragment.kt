@@ -6,6 +6,7 @@ import android.graphics.Color.TRANSPARENT
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,11 +28,15 @@ class PostAddFragment: BaseFragment() {
     }
 
     private val startActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        Log.v("seolim", "registerForActivityResult")
         postViewModel.clickImage.value = false
         with(result) {
             takeIf { resultCode == Activity.RESULT_OK }?.let {
+                Log.v("seolim", "true")
                 data?.data.run {
+                    Log.d("seolim", "uri : " + data?.data)
                     context?.let { context ->
+                        Log.e("seolim", "111")
                         Glide.with(context)
                             .load(this)
                             .error(R.drawable.baseline_warning_24)
@@ -40,6 +45,8 @@ class PostAddFragment: BaseFragment() {
 
                     postViewModel.uri.value = this.toString()
                 }
+            } ?: run {
+                Log.v("seolim", "false")
             }
         }
     }

@@ -6,11 +6,9 @@ import com.example.postexample.data.database.dao.UserInfoDao
 import com.example.postexample.data.database.entity.User
 import com.example.postexample.util.LoginPreference
 import com.google.firebase.auth.AuthResult
-import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.Dispatchers
+import io.reactivex.Single
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 class LoginRepository(application: Application): BaseRepository(application) {
     private val userDao: UserInfoDao = appDatabase.userInfoDao()
@@ -40,10 +38,10 @@ class LoginRepository(application: Application): BaseRepository(application) {
                                     .push()
                                     .setValue(userMap)
 
-                            singleEmitter.onSuccess(result)
+                            singleEmitter.onSuccess(result!!)
                         } ?: run {
                             Log.e("seolim", "" + exception)
-                            singleEmitter.onError(exception)
+                            singleEmitter.onError(exception!!)
                         }
                     }
                 }
@@ -54,10 +52,10 @@ class LoginRepository(application: Application): BaseRepository(application) {
             firebaseAuth.signInWithEmailAndPassword(email, pw)
                 .addOnCompleteListener { task ->
                     task.takeIf { it.isSuccessful() }?.let {
-                        singleEmitter.onSuccess(task.result)
+                        singleEmitter.onSuccess(task.result!!)
                     } ?: run {
                         Log.e("seolim", "" + task.exception)
-                        singleEmitter.onError(task.exception)
+                        singleEmitter.onError(task.exception!!)
                     }
                 }
         }

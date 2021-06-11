@@ -3,7 +3,7 @@
     <data>
         <variable
             name="postinfo"
-            type="com.example.postexample.model.PostInfo" />
+            type="com.example.postexample.model.DataModel.PostInfo" />
     </data>
     <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -46,7 +46,7 @@
                     android:layout_width="90dp"
                     android:layout_height="90dp"
                     android:layout_margin="10dp"
-                    app:imageUrl="@{postinfo.uri}"
+                    app:imageUrl="@{postinfo.url}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>

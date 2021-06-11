@@ -19,19 +19,19 @@ class PostListAdapter(
             binding.root
     ) {
         fun bind(info: PostInfo, position: Int) {
-            binding.postinfo = info
-
-            binding.swipeView.setOnClickListener {
-                postItemClick(info)
-            }
-
-            binding.deleteView.setOnClickListener {
-                deleteItemClick(position, info)
-            }
-            binding.invalidateAll()
+//            binding.postinfo = info
+//
+//            binding.swipeView.setOnClickListener {
+//                postItemClick(info)
+//            }
+//
+//            binding.deleteView.setOnClickListener {
+//                deleteItemClick(position, info)
+//            }
+//            binding.invalidateAll()
         }
     }
-
+//
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostListHolder
             = PostListHolder(
             LayoutPostListBinding.inflate(
@@ -49,25 +49,25 @@ class PostListAdapter(
 
     override fun getItemId(position: Int): Long = postList.get(position).toString().hashCode().toLong()
 
-    fun addPostInfo(info: PostInfo) {
-        if(!postList.contains(info)) {
-            postList.add(info)
-        }
-        Collections.sort(postList, kotlin.Comparator<PostInfo> { postInfo1: PostInfo, postInfo2: PostInfo ->
-            postInfo2.date?.compareTo(postInfo1.date ?: "") ?: 0
-        })
-        notifyDataSetChanged()
-    }
-
-    fun remove(position: Int) {
-        if (position < postList.size) {
-            postList.removeAt(position)
-        }
-        notifyDataSetChanged()
-    }
-
-    fun clear() {
-        postList.clear()
-        notifyDataSetChanged()
-    }
+//    fun addPostInfo(info: PostInfo) {
+//        if(!postList.contains(info)) {
+//            postList.add(info)
+//        }
+//        Collections.sort(postList, kotlin.Comparator<PostInfo> { postInfo1: PostInfo, postInfo2: PostInfo ->
+//            postInfo2.date?.compareTo(postInfo1.date ?: "") ?: 0
+//        })
+//        notifyDataSetChanged()
+//    }
+//
+//    fun remove(position: Int) {
+//        if (position < postList.size) {
+//            postList.removeAt(position)
+//        }
+//        notifyDataSetChanged()
+//    }
+//
+//    fun clear() {
+//        postList.clear()
+//        notifyDataSetChanged()
+//    }
 }

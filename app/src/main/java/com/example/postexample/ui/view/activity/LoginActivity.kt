@@ -7,6 +7,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.postexample.R
 import com.example.postexample.databinding.ActivityLoginBinding
 import com.example.postexample.ui.viewmodel.LogInResult
@@ -17,7 +19,12 @@ import org.jetbrains.anko.toast
 
 class LoginActivity: AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private val loginViewModel: LogInViewModel by viewModels()
+    private val loginViewModel: LogInViewModel by viewModels() {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+                    LogInViewModel(application) as T
+        }
+    }
 
     private val permissions = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private val permissionCheck = PermissionCheck(this, permissions)

@@ -3,8 +3,8 @@ package com.example.postexample
 import android.app.Application
 import android.util.Log
 import com.example.postexample.util.PreferenceManager
-import io.reactivex.rxjava3.exceptions.UndeliverableException
-import io.reactivex.rxjava3.plugins.RxJavaPlugins
+import io.reactivex.exceptions.UndeliverableException
+import io.reactivex.plugins.RxJavaPlugins
 import java.io.IOException
 import java.net.SocketException
 

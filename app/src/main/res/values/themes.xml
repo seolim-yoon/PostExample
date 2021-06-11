@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.FollowExample" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#CDDC39</item>
-        <item name="colorPrimaryVariant">#8BC34A</item>
+        <item name="colorPrimary">#FF9800</item>
+        <item name="colorPrimaryVariant">#FFC107</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
