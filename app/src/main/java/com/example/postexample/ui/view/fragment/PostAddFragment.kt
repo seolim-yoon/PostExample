@@ -23,9 +23,6 @@ import com.example.postexample.ui.viewmodel.ResultState
 
 class PostAddFragment: BaseFragment() {
     private lateinit var binding: FragmentPostAddBinding
-    private val loadingProgressDialog by lazy {
-        context?.let { LoadingProgressDialog(it) }
-    }
 
     private val startActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         Log.v("seolim", "registerForActivityResult")
@@ -62,8 +59,6 @@ class PostAddFragment: BaseFragment() {
     }
 
     override fun initView() {
-        loadingProgressDialog?.window?.setBackgroundDrawable(ColorDrawable(TRANSPARENT))
-
         with(postViewModel) {
             clickImage.value = false
             clickImage.observe(viewLifecycleOwner, Observer { result ->
@@ -80,13 +75,6 @@ class PostAddFragment: BaseFragment() {
                 when (result) {
                     ResultState.SUCCESS -> Toast.makeText(context, "업로드 성공", Toast.LENGTH_SHORT).show()
                     ResultState.FAIL -> Toast.makeText(context, "업로드 실패", Toast.LENGTH_SHORT).show()
-                }
-            })
-
-            isLoading.observe(viewLifecycleOwner, Observer { result ->
-                when (result) {
-                    true -> loadingProgressDialog?.show()
-                    false -> loadingProgressDialog?.dismiss()
                 }
             })
         }

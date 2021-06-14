@@ -1,9 +1,6 @@
 package com.example.postexample.data.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.postexample.data.database.entity.Post
 import io.reactivex.Single
 
@@ -15,6 +12,12 @@ interface PostInfoDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(post: Post)
 
-    @Query("DELETE FROM post WHERE url = :url")
-    suspend fun deletePostByURL(url: String)
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun update(post: Post)
+
+    @Query("DELETE FROM post WHERE date = :date")
+    suspend fun deletePostByDate(date: String)
+
+    @Query("DELETE FROM post")
+    suspend fun deleteAll()
 }

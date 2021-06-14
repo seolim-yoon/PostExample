@@ -1,10 +1,14 @@
 package com.example.postexample.ui.base
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.postexample.ui.view.dialog.LoadingProgressDialog
 import com.example.postexample.ui.viewmodel.LogInViewModel
 import com.example.postexample.ui.viewmodel.PostViewModel
 
@@ -22,12 +26,23 @@ open class BaseFragment: Fragment() {
         }
     }
 
+    private val loadingProgressDialog by lazy {
+        context?.let { LoadingProgressDialog(it) }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initView()
     }
 
     open fun initView() {
+        loadingProgressDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+        postViewModel.isLoading.observe(viewLifecycleOwner, Observer { result ->
+            when (result) {
+                true -> loadingProgressDialog?.show()
+                false -> loadingProgressDialog?.dismiss()
+            }
+        })
     }
 }

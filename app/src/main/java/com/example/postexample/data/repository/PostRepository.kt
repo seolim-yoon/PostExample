@@ -7,13 +7,16 @@ import com.example.postexample.data.database.dao.PostInfoDao
 import com.example.postexample.data.database.entity.Post
 import com.example.postexample.util.LoginPreference
 import com.example.postexample.util.TimeFormatUtils
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import io.reactivex.Observable
 import io.reactivex.Single
 import java.util.*
+import kotlin.collections.HashMap
 
 class PostRepository(application: Application): BaseRepository(application) {
     private val postDao: PostInfoDao = appDatabase.postInfoDao()
@@ -25,7 +28,7 @@ class PostRepository(application: Application): BaseRepository(application) {
         return postDao.getAllPost()
     }
 
-    fun createPost(uri: String, title: String, content: String) : Single<UploadTask.TaskSnapshot>  =
+    fun createPost(uri: String, title: String, content: String): Single<UploadTask.TaskSnapshot> =
             Single.create { singleEmitter ->
                 FirebaseStorage.getInstance()
                         .getReferenceFromUrl("gs://postexamp.appspot.com")
@@ -58,7 +61,7 @@ class PostRepository(application: Application): BaseRepository(application) {
             }
 
     fun removePost(position: Int, title: String): Single<Int> =
-            Single.create { singleEmitter->
+            Single.create { singleEmitter ->
                 FirebaseStorage.getInstance()
                         .getReferenceFromUrl("gs://postexamp.appspot.com")
                         .child("post/")
@@ -66,9 +69,8 @@ class PostRepository(application: Application): BaseRepository(application) {
                         .run {
                             delete()
                                     .addOnSuccessListener { task ->
-
                                         databaseReference
-                                                .child("Content")
+                                                .child("Post")
                                                 .child(uidList.get(position))
                                                 .removeValue()
 
@@ -80,42 +82,72 @@ class PostRepository(application: Application): BaseRepository(application) {
                         }
             }
 
-    fun loadImageURL(title: String) : Single<Uri> =
-        Single.create { singleEmitter ->
-            FirebaseStorage.getInstance()
-                .getReferenceFromUrl("gs://postexamp.appspot.com")
-                .child("post/img_${title}.jpg")
-                .downloadUrl
-                .addOnSuccessListener { uri ->
-                    singleEmitter.onSuccess(uri)
-                }.addOnFailureListener { error ->
-                    singleEmitter.onError(error)
-                }
-        }
+    fun loadImageURL(title: String): Single<Uri> =
+            Single.create { singleEmitter ->
+                FirebaseStorage.getInstance()
+                        .getReferenceFromUrl("gs://postexamp.appspot.com")
+                        .child("post/img_${title}.jpg")
+                        .downloadUrl
+                        .addOnSuccessListener { uri ->
+                            singleEmitter.onSuccess(uri)
+                        }.addOnFailureListener { error ->
+                            singleEmitter.onError(error)
+                        }
+            }
 
-    fun refreshPost() : Single<DataSnapshot> =
-        Single.create { singleEmitter ->
+    fun loadAllPost(): Single<DataSnapshot> =
+            Single.create { singleEmitter ->
             post.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     uidList.clear()
                     snapshot.children.forEach {
                         uidList.add(it.key ?: "")
                     }
-                    singleEmitter.onSuccess(snapshot)
                 }
-
                 override fun onCancelled(error: DatabaseError) {
-                    Log.e("seolim", "error : " + error.toException())
-                    singleEmitter.onError(error.toException())
                 }
             })
         }
+
+    fun changePost(): Observable<HashMap<String, DataSnapshot>> =
+            Observable.create({ singleEmitter ->
+                post.addChildEventListener(object : ChildEventListener {
+                    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                        Log.e("seolim", "onChildAdded")
+                        singleEmitter.onNext(hashMapOf("add" to snapshot))
+                    }
+
+                    override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                        Log.e("seolim", "onChildChanged")
+                    }
+
+                    override fun onChildRemoved(snapshot: DataSnapshot) {
+                        Log.e("seolim", "onChildRemoved")
+                        singleEmitter.onNext(hashMapOf("remove" to snapshot))
+                    }
+
+                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
+            })
+
 
     suspend fun insertPost(post: Post) {
         postDao.insert(post)
     }
 
-    suspend fun deletePost(url: String) {
-        postDao.deletePostByURL(url)
+    suspend fun updatePost(post: Post) {
+        postDao.update(post)
+    }
+
+    suspend fun deletePost(date: String) {
+        postDao.deletePostByDate(date)
+    }
+
+    suspend fun deleteAll() {
+        postDao.deleteAll()
     }
 }

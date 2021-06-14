@@ -2,13 +2,18 @@ package com.example.postexample.ui.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.postexample.R
 import com.example.postexample.databinding.ActivityMainBinding
 import com.example.postexample.ui.view.fragment.PostAddFragment
 import com.example.postexample.ui.view.fragment.HomeFragment
 import com.example.postexample.ui.view.fragment.UserInfoFragment
+import com.example.postexample.ui.viewmodel.PostViewModel
 import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {

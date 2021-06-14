@@ -2,6 +2,7 @@ package com.example.postexample.ui.view.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.example.postexample.ui.view.adapter.PagingAdapter
 import com.example.postexample.ui.viewmodel.ResultState
 import com.example.postexample.util.ItemDecoration
 import com.example.postexample.util.SwipeHelperCallback
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -37,7 +39,7 @@ class HomeFragment: BaseFragment() {
                 startActivity(intent)
             }
         }, { position, postInfo ->
-            postViewModel.removePost(position, postInfo.title ?: "", postInfo.url ?: "")
+            postViewModel.removePost(position, postInfo.title)
         })
     }
 
@@ -72,21 +74,26 @@ class HomeFragment: BaseFragment() {
         }
 
         with(postViewModel) {
-            refreshPost()
-
-            deletePosition.observe(viewLifecycleOwner, Observer { position ->
-//                postListAdapter.remove(position)
-                Toast.makeText(context, "삭제 되었습니다.", Toast.LENGTH_SHORT).show()
+            loadAllPost()
+            getAllPosts()
+            allPosts.observe(viewLifecycleOwner, Observer {
+                pagingAdapter.refresh()
+            })
+            deleteState.observe(viewLifecycleOwner, Observer { state ->
+                when(state) {
+                    ResultState.SUCCESS -> {
+                        Toast.makeText(context, "삭제 되었습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    ResultState.FAIL -> {}
+                }
             })
         }
 
-
         lifecycleScope.launch {
+            delay(300)
             postViewModel.pager.collectLatest { pagingData ->
                 pagingAdapter.submitData(pagingData)
             }
         }
-        pagingAdapter.refresh()
-
     }
 }
