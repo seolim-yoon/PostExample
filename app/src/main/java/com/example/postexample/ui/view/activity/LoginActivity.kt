@@ -53,17 +53,20 @@ class LoginActivity: AppCompatActivity() {
             startMainActivity()
         }
 
-        loginViewModel.completeLogIn.observe(this, Observer { result ->
-            when(result) {
-                LogInResult.SUCCESS -> {
-                    startMainActivity()
-                    toast("${LoginPreference.getUserName()}님 환영합니다!")
+        with(loginViewModel) {
+            loadAllUser()
+            completeLogIn.observe(this@LoginActivity, Observer { result ->
+                when(result) {
+                    LogInResult.SUCCESS -> {
+                        startMainActivity()
+                        toast("${LoginPreference.getUserName()}님 환영합니다!")
+                    }
+                    LogInResult.FAIL -> {
+                        toast("아이디 또는 비밀번호를 확인해주세요.")
+                    }
                 }
-                LogInResult.FAIL -> {
-                    toast("아이디 또는 비밀번호를 확인해주세요.")
-                }
-            }
-        })
+            })
+        }
 
         binding.btnSignup.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))

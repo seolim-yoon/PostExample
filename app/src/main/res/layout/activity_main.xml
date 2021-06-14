@@ -11,10 +11,15 @@
             android:id="@+id/tb_app_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent">
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/postexample_logo"/>
+        </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
             android:id="@+id/fl_container"

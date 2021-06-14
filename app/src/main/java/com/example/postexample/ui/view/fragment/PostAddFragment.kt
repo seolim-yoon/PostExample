@@ -59,6 +59,8 @@ class PostAddFragment: BaseFragment() {
     }
 
     override fun initView() {
+        super.initView()
+
         with(postViewModel) {
             clickImage.value = false
             clickImage.observe(viewLifecycleOwner, Observer { result ->

@@ -26,7 +26,7 @@ open class BaseFragment: Fragment() {
         }
     }
 
-    private val loadingProgressDialog by lazy {
+    open val loadingProgressDialog by lazy {
         context?.let { LoadingProgressDialog(it) }
     }
 

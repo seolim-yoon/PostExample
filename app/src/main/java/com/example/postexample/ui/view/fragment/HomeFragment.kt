@@ -54,6 +54,8 @@ class HomeFragment: BaseFragment() {
     }
 
     override fun initView() {
+        super.initView()
+
         val swipeHelperCallback = SwipeHelperCallback().apply {
             setClamp(200f)
         }
@@ -75,7 +77,6 @@ class HomeFragment: BaseFragment() {
 
         with(postViewModel) {
             loadAllPost()
-            getAllPosts()
             allPosts.observe(viewLifecycleOwner, Observer {
                 pagingAdapter.refresh()
             })

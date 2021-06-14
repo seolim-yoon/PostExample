@@ -8,6 +8,4 @@ data class Post(var url: String,
                 var title: String,
                 var content: String,
                 var name: String,
-                var date: String) {
-    @PrimaryKey(autoGenerate = true) var id: Int = 0
-}
+                @PrimaryKey var date: String)

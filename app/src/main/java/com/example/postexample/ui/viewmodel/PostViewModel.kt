@@ -47,15 +47,36 @@ class PostViewModel(application: Application): BaseViewModel(application) {
 
     }.cachedIn(viewModelScope)
 
+    fun getAllPosts() {
+        addDisposable(postRepository.getAllPost()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<List<Post>>() {
+                    override fun onSuccess(posts: List<Post>) {
+                        allPosts.value = posts
+                        Log.e("seolim", "set")
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Log.e("seolim", "$e.message")
+                    }
+                }))
+    }
+
     fun loadAllPost() {
         addDisposable(
-                postRepository.loadAllPost()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                        }, {
-                        })
-        )    }
+            postRepository.loadAllPost()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    it.children.forEach {
+                        loadImageURL(it.getValue() as HashMap<String, String>)
+                        Log.i("seolim", "value : " + (it.getValue() as HashMap<String, String>).toString())
+                    }
+                }, {
+                })
+        )
+    }
 
     fun createPost(uri: String, title: String, content: String) {
         showLoadingBar()
@@ -78,57 +99,13 @@ class PostViewModel(application: Application): BaseViewModel(application) {
     fun removePost(position: Int, title: String) {
         showLoadingBar()
         addDisposable(
-                postRepository.removePost(position, title)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe{ position ->
-                            deleteState.value = ResultState.SUCCESS
-                            changePost()
-                        }
-        )
-    }
-
-    fun deletePost() {
-
-    }
-
-//    fun loadAllPost() {
-//        addDisposable(
-//            postRepository.loadAllPost()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({
-//                    it.children.forEach {
-//                        loadImageURL(it.getValue() as HashMap<String, String>, false)
-//                        Log.i("seolim", "value : " + (it.getValue() as HashMap<String, String>).toString())
-//                    }
-//                }, {
-//
-//                })
-//        )
-//    }
-
-    // add, delete
-    fun changePost() {
-        addDisposable(
-                postRepository.changePost()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe{
-                            it.forEach {
-                            }
-                            when {
-                                it.containsKey("add") -> loadImageURL(it.get("add")?.getValue() as HashMap<String, String>)
-                                it.containsKey("remove") -> {
-                                    var post = it.get("remove")?.getValue() as HashMap<String, String>
-                                    viewModelScope.launch {
-                                        postRepository.deletePost(post["date"] ?: "")
-                                    }
-                                    hideLoadingBar()
-                                    getAllPosts()
-                                }
-                            }
-                        }
+            postRepository.removePost(position, title)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe{ position ->
+                    deleteState.value = ResultState.SUCCESS
+                    changePost()
+                }
         )
     }
 
@@ -152,24 +129,29 @@ class PostViewModel(application: Application): BaseViewModel(application) {
         )
     }
 
-    fun getAllPosts() {
-        addDisposable(postRepository.getAllPost()
+    // add, delete
+    fun changePost() {
+        addDisposable(
+            postRepository.changePost()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<List<Post>>() {
-                    override fun onSuccess(posts: List<Post>) {
-                        allPosts.value = posts
-                        Log.e("seolim", "set")
+                .subscribe{
+                    it.forEach {
                     }
-
-                    override fun onError(e: Throwable) {
-                        Log.e("seolim", "$e.message")
+                    when {
+                        it.containsKey("add") -> loadImageURL(it.get("add")?.getValue() as HashMap<String, String>)
+                        it.containsKey("remove") -> {
+                            var post = it.get("remove")?.getValue() as HashMap<String, String>
+                            viewModelScope.launch {
+                                postRepository.deletePost(post["date"] ?: "")
+                            }
+                            hideLoadingBar()
+                            getAllPosts()
+                        }
                     }
-                }))
+                }
+        )
     }
-
-
-
 }
 
 enum class ResultState(state: String) {

@@ -28,6 +28,21 @@ class PostRepository(application: Application): BaseRepository(application) {
         return postDao.getAllPost()
     }
 
+    fun loadAllPost(): Single<DataSnapshot> =
+        Single.create { singleEmitter ->
+            post.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    uidList.clear()
+                    snapshot.children.forEach {
+                        uidList.add(it.key ?: "")
+                    }
+                    singleEmitter.onSuccess(snapshot)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
+        }
+
     fun createPost(uri: String, title: String, content: String): Single<UploadTask.TaskSnapshot> =
             Single.create { singleEmitter ->
                 FirebaseStorage.getInstance()
@@ -95,19 +110,6 @@ class PostRepository(application: Application): BaseRepository(application) {
                         }
             }
 
-    fun loadAllPost(): Single<DataSnapshot> =
-            Single.create { singleEmitter ->
-            post.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    uidList.clear()
-                    snapshot.children.forEach {
-                        uidList.add(it.key ?: "")
-                    }
-                }
-                override fun onCancelled(error: DatabaseError) {
-                }
-            })
-        }
 
     fun changePost(): Observable<HashMap<String, DataSnapshot>> =
             Observable.create({ singleEmitter ->

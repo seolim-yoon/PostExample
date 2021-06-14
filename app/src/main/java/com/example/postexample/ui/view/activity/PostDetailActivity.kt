@@ -24,7 +24,6 @@ class PostDetailActivity: AppCompatActivity() {
                 intent.getStringExtra("content"),
                 intent.getStringExtra("name"),
                 intent.getStringExtra("date"))
-        setSupportActionBar(binding.tbPostDetail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

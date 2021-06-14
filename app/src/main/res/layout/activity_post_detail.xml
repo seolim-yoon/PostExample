@@ -15,11 +15,16 @@
             android:id="@+id/tb_post_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/iv_post_img"/>
+            app:layout_constraintBottom_toTopOf="@id/iv_post_img">
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/postexample_logo"/>
+        </androidx.appcompat.widget.Toolbar>
 
         <ImageView
             android:id="@+id/iv_post_img"

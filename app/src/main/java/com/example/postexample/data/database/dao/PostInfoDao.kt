@@ -6,7 +6,7 @@ import io.reactivex.Single
 
 @Dao
 interface PostInfoDao {
-    @Query("SELECT * FROM post")
+    @Query("SELECT * FROM post ORDER BY date DESC")
     fun getAllPost(): Single<List<Post>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
