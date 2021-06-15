@@ -33,6 +33,10 @@ class SignUpActivity: AppCompatActivity() {
     }
 
     private fun init() {
+        setSupportActionBar(binding.tbSignup)
+        supportActionBar?.title = "회원가입"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         loginViewModel.completeSignUp.observe(this, Observer { result ->
             when (result) {
                 LogInResult.SUCCESS -> {

@@ -32,7 +32,6 @@
                     android:textColor="#ffffff"
                     android:layout_marginEnd="25dp"
                     android:layout_gravity="end|center_vertical" />
-
             </FrameLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,7 +71,6 @@
                     app:layout_constraintLeft_toRightOf="@id/iv_post_img"
                     app:layout_constraintBottom_toBottomOf="@id/iv_post_img"/>
 
-
                 <TextView
                     android:id="@+id/tv_post_date"
                     android:layout_width="wrap_content"
@@ -83,19 +81,31 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <Button
-                    android:id="@+id/btn_follow"
+                <ImageButton
+                    android:id="@+id/btn_like"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="Follow"
-                    android:textColor="@color/white"
                     android:gravity="center"
-                    android:background="#1638F6"
+                    android:src="@drawable/img_unlike"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/Transparent"
+                    app:layout_constraintVertical_chainStyle="packed"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:tag="follow"
-                    android:visibility="gone"/>
+                    app:layout_constraintBottom_toTopOf="@id/tv_like_num"
+                    android:tag="unlike"/>
+
+                <TextView
+                    android:id="@+id/tv_like_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@{String.valueOf(postinfo.likenum)}"
+                    app:layout_constraintTop_toBottomOf="@id/btn_like"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@id/btn_like"
+                    app:layout_constraintRight_toRightOf="@id/btn_like"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
     </androidx.cardview.widget.CardView>

@@ -8,4 +8,5 @@ data class Post(var url: String,
                 var title: String,
                 var content: String,
                 var name: String,
-                @PrimaryKey var date: String)
+                @PrimaryKey var date: String,
+                var likenum: String)

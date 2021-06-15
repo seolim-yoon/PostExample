@@ -12,13 +12,11 @@ import com.example.postexample.data.database.entity.Post
 import com.example.postexample.data.repository.PostRepository
 import com.example.postexample.model.DataModel
 import com.example.postexample.ui.base.BaseViewModel
-import com.google.firebase.database.DataSnapshot
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlin.collections.HashMap
 
 class PostViewModel(application: Application): BaseViewModel(application) {
     private val postRepository = PostRepository(application)
@@ -41,7 +39,7 @@ class PostViewModel(application: Application): BaseViewModel(application) {
         Log.v("seolim", "allTodos : " + allPosts.value.toString())
         PostPagingSource(allPosts.value ?: listOf())
     }.flow.map {
-        it.map<DataModel> { DataModel.PostInfo(it.url, it.title, it.content, it.name, it.date) }
+        it.map<DataModel> { DataModel.PostInfo(it.url, it.title, it.content, it.name, it.date, it.likenum) }
 //                .insertHeaderItem(DataModel.Header("HEADER"))
 //                .insertFooterItem(DataModel.Header("FOOTER"))
 
@@ -65,91 +63,92 @@ class PostViewModel(application: Application): BaseViewModel(application) {
 
     fun loadAllPost() {
         addDisposable(
-            postRepository.loadAllPost()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    it.children.forEach {
-                        loadImageURL(it.getValue() as HashMap<String, String>)
-                        Log.i("seolim", "value : " + (it.getValue() as HashMap<String, String>).toString())
-                    }
-                }, {
-                })
+                postRepository.loadAllPost()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            it.children.forEach {
+                                loadImageURL(it.getValue() as HashMap<String, String>)
+                                Log.i("seolim", "value : " + (it.getValue() as HashMap<String, String>).toString())
+                            }
+                        }, {
+                        })
         )
     }
 
     fun createPost(uri: String, title: String, content: String) {
         showLoadingBar()
         addDisposable(
-            postRepository.createPost(uri, title, content)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    uploadState.value = ResultState.SUCCESS
-                    changePost()
-                    hideLoadingBar()
+                postRepository.createPost(uri, title, content)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            uploadState.value = ResultState.SUCCESS
+                            changePost()
+                            hideLoadingBar()
 
-                }, {
-                    uploadState.value = ResultState.FAIL
-                    hideLoadingBar()
-                })
+                        }, {
+                            uploadState.value = ResultState.FAIL
+                            hideLoadingBar()
+                        })
         )
     }
 
     fun removePost(position: Int, title: String) {
         showLoadingBar()
         addDisposable(
-            postRepository.removePost(position, title)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe{ position ->
-                    deleteState.value = ResultState.SUCCESS
-                    changePost()
-                }
+                postRepository.removePost(position, title)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { position ->
+                            deleteState.value = ResultState.SUCCESS
+                            changePost()
+                        }
         )
     }
 
     fun loadImageURL(post: HashMap<String, String>) {
         addDisposable(
-            postRepository.loadImageURL(post["title"] ?: "")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { uri ->
-                    var post = Post(uri.toString(),
-                            post["title"] ?: "",
-                            post["content"] ?: "",
-                            post["name"] ?: "",
-                            post["date"] ?: "")
-
-                    viewModelScope.launch {
-                        postRepository.insertPost(post)
-                    }
-                    getAllPosts()
-                }
+                postRepository.loadImageURL(post["title"] ?: "")
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { uri ->
+                            var post = Post(uri.toString(),
+                                    post["title"] ?: "",
+                                    post["content"] ?: "",
+                                    post["name"] ?: "",
+                                    post["date"] ?: "",
+                                    post["likenum"] ?: ""
+                            )
+                            viewModelScope.launch {
+                                postRepository.insertPost(post)
+                            }
+                            getAllPosts()
+                        }
         )
     }
 
     // add, delete
     fun changePost() {
         addDisposable(
-            postRepository.changePost()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe{
-                    it.forEach {
-                    }
-                    when {
-                        it.containsKey("add") -> loadImageURL(it.get("add")?.getValue() as HashMap<String, String>)
-                        it.containsKey("remove") -> {
-                            var post = it.get("remove")?.getValue() as HashMap<String, String>
-                            viewModelScope.launch {
-                                postRepository.deletePost(post["date"] ?: "")
+                postRepository.changePost()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            it.forEach {
                             }
-                            hideLoadingBar()
-                            getAllPosts()
+                            when {
+                                it.containsKey("add") -> loadImageURL(it.get("add")?.getValue() as HashMap<String, String>)
+                                it.containsKey("remove") -> {
+                                    var post = it.get("remove")?.getValue() as HashMap<String, String>
+                                    viewModelScope.launch {
+                                        postRepository.deletePost(post["date"] ?: "")
+                                    }
+                                    hideLoadingBar()
+                                    getAllPosts()
+                                }
+                            }
                         }
-                    }
-                }
         )
     }
 }

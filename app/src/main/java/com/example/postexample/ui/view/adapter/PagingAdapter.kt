@@ -79,29 +79,22 @@ class PagingAdapter(
             binding.deleteView.setOnClickListener {
                 deleteItemClick(position, info)
             }
-            binding.invalidateAll()
+
+            binding.btnLike.setOnClickListener {
+                when(it.tag) {
+                    "like" -> {
+                        it.tag = "unlike"
+                        it.setBackgroundResource(R.drawable.img_unlike)
+                        info.likenum = (info.likenum.toInt() - 1).toString()
+                    }
+                    "unlike" -> {
+                        it.tag = "like"
+                        it.setBackgroundResource(R.drawable.img_like)
+                        info.likenum = (info.likenum.toInt() + 1).toString()
+                    }
+                }
+                binding.invalidateAll()
+            }
         }
     }
-
-//    fun addPostInfo(info: PostInfo) {
-//        if(!postList.contains(info)) {
-//            postList.add(info)
-//        }
-//        Collections.sort(postList, kotlin.Comparator<PostInfo> { postInfo1: PostInfo, postInfo2: PostInfo ->
-//            postInfo2.date?.compareTo(postInfo1.date ?: "") ?: 0
-//        })
-//        notifyDataSetChanged()
-//    }
-//
-//    fun remove(position: Int) {
-//        if (position < postList.size) {
-//            postList.removeAt(position)
-//        }
-//        notifyDataSetChanged()
-//    }
-//
-//    fun clear() {
-//        postList.clear()
-//        notifyDataSetChanged()
-//    }
 }

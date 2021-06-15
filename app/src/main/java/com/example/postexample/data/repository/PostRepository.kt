@@ -57,7 +57,8 @@ class PostRepository(application: Application): BaseRepository(application) {
                                                 "title" to title,
                                                 "content" to content,
                                                 "name" to LoginPreference.getUserName(),
-                                                "date" to TimeFormatUtils.dateFormat.format(Date(System.currentTimeMillis()))
+                                                "date" to TimeFormatUtils.dateFormat.format(Date(System.currentTimeMillis())),
+                                                "likenum" to "0"
                                         )
 
                                         // Firebase RealTime DB
@@ -136,6 +137,13 @@ class PostRepository(application: Application): BaseRepository(application) {
                 })
             })
 
+
+    fun likeUnlikePost() : Single<UploadTask.TaskSnapshot> =
+        Single.create { singleEmitter ->
+            databaseReference
+                .child("Post")
+//            singleEmitter.onSuccess(task)
+        }
 
     suspend fun insertPost(post: Post) {
         postDao.insert(post)

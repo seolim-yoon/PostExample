@@ -24,7 +24,12 @@ class PostDetailActivity: AppCompatActivity() {
                 intent.getStringExtra("content"),
                 intent.getStringExtra("name"),
                 intent.getStringExtra("date"))
+
+        setSupportActionBar(binding.tbPostDetail)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
