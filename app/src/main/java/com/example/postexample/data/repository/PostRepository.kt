@@ -24,8 +24,16 @@ class PostRepository(application: Application): BaseRepository(application) {
 
     private var uidList = arrayListOf<String>()
 
+    fun getPagingData(size: Int, page: Int): Int? =
+            if (page < size) page + 1
+            else null
+
     fun getAllPost(): Single<List<Post>> {
         return postDao.getAllPost()
+    }
+
+    fun getPostByDate(date: String) : Single<List<Post>> {
+        return postDao.getPostByDate(date)
     }
 
     fun loadAllPost(): Single<DataSnapshot> =

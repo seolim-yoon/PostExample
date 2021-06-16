@@ -9,10 +9,13 @@ interface PostInfoDao {
     @Query("SELECT * FROM post ORDER BY date DESC")
     fun getAllPost(): Single<List<Post>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Query("SELECT * FROM post WHERE date = :date")
+    fun getPostByDate(date: String): Single<List<Post>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(post: Post)
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(post: Post)
 
     @Query("DELETE FROM post WHERE date = :date")

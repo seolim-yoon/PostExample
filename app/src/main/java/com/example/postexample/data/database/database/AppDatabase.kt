@@ -9,7 +9,7 @@ import com.example.postexample.data.database.dao.UserInfoDao
 import com.example.postexample.data.database.entity.Post
 import com.example.postexample.data.database.entity.User
 
-@Database(entities = arrayOf(Post::class, User::class), version = 11)
+@Database(entities = arrayOf(Post::class, User::class), version = 13)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun postInfoDao(): PostInfoDao
     abstract fun userInfoDao(): UserInfoDao

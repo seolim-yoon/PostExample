@@ -35,9 +35,9 @@ class PostViewModel(application: Application): BaseViewModel(application) {
         clickImage.value = true
     }
 
-    val pager = Pager(PagingConfig(pageSize = 10)) {
+    val pager = Pager(PagingConfig(pageSize = 6)) {
         Log.v("seolim", "allTodos : " + allPosts.value.toString())
-        PostPagingSource(allPosts.value ?: listOf())
+        PostPagingSource(postRepository, allPosts.value ?: listOf())
     }.flow.map {
         it.map<DataModel> { DataModel.PostInfo(it.url, it.title, it.content, it.name, it.date, it.likenum) }
 //                .insertHeaderItem(DataModel.Header("HEADER"))
@@ -52,7 +52,26 @@ class PostViewModel(application: Application): BaseViewModel(application) {
                 .subscribeWith(object : DisposableSingleObserver<List<Post>>() {
                     override fun onSuccess(posts: List<Post>) {
                         allPosts.value = posts
-                        Log.e("seolim", "set")
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Log.e("seolim", "$e.message")
+                    }
+                }))
+    }
+
+    fun getPostByDate(date: String, insertPost: Post) {
+        addDisposable(postRepository.getPostByDate(date)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<List<Post>>() {
+                    override fun onSuccess(posts: List<Post>) {
+                        viewModelScope.launch {
+                            if(posts.size == 0) {
+                                postRepository.insertPost(insertPost)
+                            }
+                        }
+                        getAllPosts()
                     }
 
                     override fun onError(e: Throwable) {
@@ -113,17 +132,15 @@ class PostViewModel(application: Application): BaseViewModel(application) {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { uri ->
-                            var post = Post(uri.toString(),
+                            var insertPost = Post(uri.toString(),
                                     post["title"] ?: "",
                                     post["content"] ?: "",
                                     post["name"] ?: "",
                                     post["date"] ?: "",
                                     post["likenum"] ?: ""
                             )
-                            viewModelScope.launch {
-                                postRepository.insertPost(post)
-                            }
-                            getAllPosts()
+
+                            getPostByDate(post["date"] ?: "", insertPost)
                         }
         )
     }
