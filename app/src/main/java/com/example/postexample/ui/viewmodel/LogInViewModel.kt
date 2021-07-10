@@ -4,9 +4,8 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.postexample.data.database.entity.User
 import com.example.postexample.data.repository.LoginRepository
-import com.example.postexample.ui.base.BaseViewModel
+import com.example.postexample.base.BaseViewModel
 import com.example.postexample.util.LoginPreference
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -68,7 +67,6 @@ class LogInViewModel(application: Application) : BaseViewModel(application) {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ email ->
                         viewModelScope.launch {
-                            Log.v("seolim", "email : " + email)
                             LoginPreference.setUserPreference(loginRepository.getCurrentUser(email).name, email, pw)
                             completeLogIn.value = LogInResult.SUCCESS
                             userState.value = UserState.LOGIN

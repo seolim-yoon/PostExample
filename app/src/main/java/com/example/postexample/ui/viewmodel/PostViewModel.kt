@@ -11,14 +11,13 @@ import com.example.postexample.data.PostPagingSource
 import com.example.postexample.data.database.entity.Post
 import com.example.postexample.data.repository.PostRepository
 import com.example.postexample.model.DataModel
-import com.example.postexample.ui.base.BaseViewModel
+import com.example.postexample.base.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
-class PostViewModel(application: Application): BaseViewModel(application) {
+class PostViewModel(application: Application) : BaseViewModel(application) {
     private val postRepository = PostRepository(application)
 
     var uri: MutableLiveData<String> = MutableLiveData()
@@ -37,7 +36,7 @@ class PostViewModel(application: Application): BaseViewModel(application) {
 
     val pager = Pager(PagingConfig(pageSize = 6)) {
         Log.v("seolim", "allTodos : " + allPosts.value.toString())
-        PostPagingSource(postRepository, allPosts.value ?: listOf())
+        PostPagingSource(allPosts.value ?: listOf())
     }.flow.map {
         it.map<DataModel> { DataModel.PostInfo(it.url, it.title, it.content, it.name, it.date, it.likenum) }
 //                .insertHeaderItem(DataModel.Header("HEADER"))
@@ -45,7 +44,7 @@ class PostViewModel(application: Application): BaseViewModel(application) {
 
     }.cachedIn(viewModelScope)
 
-    fun getAllPosts() {
+    private fun getAllPosts() {
         addDisposable(postRepository.getAllPost()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -60,38 +59,14 @@ class PostViewModel(application: Application): BaseViewModel(application) {
                 }))
     }
 
-    fun getPostByDate(date: String, insertPost: Post) {
-        addDisposable(postRepository.getPostByDate(date)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<List<Post>>() {
-                    override fun onSuccess(posts: List<Post>) {
-                        viewModelScope.launch {
-                            if(posts.size == 0) {
-                                postRepository.insertPost(insertPost)
-                            }
-                        }
-                        getAllPosts()
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Log.e("seolim", "$e.message")
-                    }
-                }))
-    }
-
     fun loadAllPost() {
         addDisposable(
                 postRepository.loadAllPost()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            it.children.forEach {
-                                loadImageURL(it.getValue() as HashMap<String, String>)
-                                Log.i("seolim", "value : " + (it.getValue() as HashMap<String, String>).toString())
-                            }
-                        }, {
-                        })
+                        .subscribe { snapshot ->
+                            getAllPosts()
+                        }
         )
     }
 
@@ -101,38 +76,8 @@ class PostViewModel(application: Application): BaseViewModel(application) {
                 postRepository.createPost(uri, title, content)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            uploadState.value = ResultState.SUCCESS
-                            changePost()
-                            hideLoadingBar()
-
-                        }, {
-                            uploadState.value = ResultState.FAIL
-                            hideLoadingBar()
-                        })
-        )
-    }
-
-    fun removePost(position: Int, title: String) {
-        showLoadingBar()
-        addDisposable(
-                postRepository.removePost(position, title)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { position ->
-                            deleteState.value = ResultState.SUCCESS
-                            changePost()
-                        }
-        )
-    }
-
-    fun loadImageURL(post: HashMap<String, String>) {
-        addDisposable(
-                postRepository.loadImageURL(post["title"] ?: "")
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { uri ->
-                            var insertPost = Post(uri.toString(),
+                        .subscribe({ post ->
+                            val insertPost = Post(post["url"] ?: "",
                                     post["title"] ?: "",
                                     post["content"] ?: "",
                                     post["name"] ?: "",
@@ -140,37 +85,59 @@ class PostViewModel(application: Application): BaseViewModel(application) {
                                     post["likenum"] ?: ""
                             )
 
-                            getPostByDate(post["date"] ?: "", insertPost)
-                        }
+                            insertRoomDB(insertPost)
+
+                        }, {
+                            Log.e("seolim", "error : " + it.message)
+                            uploadState.value = ResultState.FAIL
+                            hideLoadingBar()
+                        })
         )
     }
 
-    // add, delete
-    fun changePost() {
+    private fun insertRoomDB(insertPost: Post) {
         addDisposable(
-                postRepository.changePost()
+                postRepository.insertPost(insertPost)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
-                            it.forEach {
-                            }
-                            when {
-                                it.containsKey("add") -> loadImageURL(it.get("add")?.getValue() as HashMap<String, String>)
-                                it.containsKey("remove") -> {
-                                    var post = it.get("remove")?.getValue() as HashMap<String, String>
-                                    viewModelScope.launch {
-                                        postRepository.deletePost(post["date"] ?: "")
-                                    }
-                                    hideLoadingBar()
-                                    getAllPosts()
-                                }
-                            }
-                        }
+                            uploadState.value = ResultState.SUCCESS
+                            hideLoadingBar()
+                            getAllPosts()
+                        })
+    }
+
+    fun removePost(position: Int, title: String, date: String) {
+        showLoadingBar()
+        addDisposable(
+                postRepository.removePost(position, title)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ position ->
+                            removeRoomDB(date)
+                        }, {
+                            Log.e("seolim", "error : " + it.message)
+                            deleteState.value = ResultState.FAIL
+                            hideLoadingBar()
+                        })
         )
+    }
+
+    private fun removeRoomDB(date: String) {
+        addDisposable(
+                postRepository.deletePostByDate(date)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            deleteState.value = ResultState.SUCCESS
+                            hideLoadingBar()
+                            getAllPosts()
+                        })
     }
 }
 
 enum class ResultState(state: String) {
+    NONE("none"),
     SUCCESS("success"),
     FAIL("fail");
 }

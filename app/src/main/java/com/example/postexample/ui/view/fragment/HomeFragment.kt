@@ -1,7 +1,7 @@
 package com.example.postexample.ui.view.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,7 +31,7 @@ class HomeFragment: BaseFragment() {
             bundle.putSerializable("PostInfo", postInfo)
             findNavController().navigate(R.id.action_homeFragment_to_postDetailFragment, bundle)
         }, { position, postInfo ->
-            postViewModel.removePost(position, postInfo.title)
+            postViewModel.removePost(position, postInfo.title, postInfo.date)
         })
     }
 
@@ -46,6 +45,7 @@ class HomeFragment: BaseFragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun initView() {
         super.initView()
 
@@ -78,8 +78,11 @@ class HomeFragment: BaseFragment() {
                     ResultState.SUCCESS -> {
                         Toast.makeText(context, "삭제 되었습니다.", Toast.LENGTH_SHORT).show()
                     }
-                    ResultState.FAIL -> {}
+                    ResultState.FAIL -> {
+                        Toast.makeText(context, "삭제를 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                    }
                 }
+//                deleteState.value = ResultState.NONE
             })
         }
 

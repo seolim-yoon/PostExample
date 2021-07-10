@@ -2,11 +2,11 @@ package com.example.postexample.data.repository
 
 import android.app.Application
 import android.util.Log
+import com.example.postexample.base.BaseRepository
 import com.example.postexample.data.database.dao.UserInfoDao
 import com.example.postexample.data.database.entity.User
 import com.example.postexample.util.LoginPreference
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener

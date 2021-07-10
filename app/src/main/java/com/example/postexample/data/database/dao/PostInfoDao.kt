@@ -2,6 +2,7 @@ package com.example.postexample.data.database.dao
 
 import androidx.room.*
 import com.example.postexample.data.database.entity.Post
+import io.reactivex.Completable
 import io.reactivex.Single
 
 @Dao
@@ -13,14 +14,14 @@ interface PostInfoDao {
     fun getPostByDate(date: String): Single<List<Post>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(post: Post)
+    fun insert(post: Post) : Completable
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(post: Post)
+    fun update(post: Post)
 
     @Query("DELETE FROM post WHERE date = :date")
-    suspend fun deletePostByDate(date: String)
+    fun deletePostByDate(date: String) : Completable
 
     @Query("DELETE FROM post")
-    suspend fun deleteAll()
+    fun deleteAll()
 }
