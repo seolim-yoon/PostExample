@@ -1,4 +1,4 @@
-package com.example.postexample.ui.base
+package com.example.postexample.base
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

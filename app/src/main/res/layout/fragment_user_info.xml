@@ -16,13 +16,35 @@
         android:background="@color/white_gray"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/ly_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+                <TextView
+                    android:id="@+id/tv_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="User Info"
+                    android:textStyle="bold"
+                    android:textSize="18dp" />
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
         <TextView
             android:id="@+id/bg_user_info"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/bg_user_info"
             android:layout_margin="10dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ly_toolbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/btn_logout"/>

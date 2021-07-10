@@ -1,4 +1,4 @@
-package com.example.postexample.ui.base
+package com.example.postexample.base
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -16,13 +16,13 @@ open class BaseFragment: Fragment() {
     open val postViewModel: PostViewModel by activityViewModels() {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-                    PostViewModel(activity?.application!!) as T
+                    PostViewModel(requireActivity().application) as T
         }
     }
     open val loginViewModel: LogInViewModel by activityViewModels() {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-                    LogInViewModel(activity?.application!!) as T
+                    LogInViewModel(requireActivity().application) as T
         }
     }
 

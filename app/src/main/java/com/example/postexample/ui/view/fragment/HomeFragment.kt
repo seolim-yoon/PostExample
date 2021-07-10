@@ -1,6 +1,5 @@
 package com.example.postexample.ui.view.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,12 +9,13 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.postexample.R
 import com.example.postexample.databinding.FragmentHomeBinding
-import com.example.postexample.ui.base.BaseFragment
-import com.example.postexample.ui.view.activity.PostDetailActivity
+import com.example.postexample.base.BaseFragment
 import com.example.postexample.ui.view.adapter.PagingAdapter
 import com.example.postexample.ui.viewmodel.ResultState
 import com.example.postexample.util.ItemDecoration
@@ -28,16 +28,9 @@ class HomeFragment: BaseFragment() {
     private lateinit var binding: FragmentHomeBinding
     private val pagingAdapter by lazy {
         PagingAdapter(context, { postInfo ->
-            activity?.let {
-                val intent = Intent(context, PostDetailActivity::class.java).apply {
-                    putExtra("url", postInfo.url)
-                    putExtra("title", postInfo.title)
-                    putExtra("content", postInfo.content)
-                    putExtra("name", postInfo.name)
-                    putExtra("date", postInfo.date)
-                }
-                startActivity(intent)
-            }
+            val bundle = Bundle()
+            bundle.putSerializable("PostInfo", postInfo)
+            findNavController().navigate(R.id.action_homeFragment_to_postDetailFragment, bundle)
         }, { position, postInfo ->
             postViewModel.removePost(position, postInfo.title)
         })

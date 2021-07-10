@@ -3,7 +3,7 @@
     <data>
         <variable
             name="postinfo"
-            type="com.example.postexample.model.PostInfo" />
+            type="com.example.postexample.model.DataModel.PostInfo" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -11,23 +11,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tb_post_detail"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/ly_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/iv_post_img"/>
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:navigationIcon="@drawable/ic_icon_back">
+                <TextView
+                    android:id="@+id/tv_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Detail"
+                    android:textSize="18dp" />
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <ImageView
             android:id="@+id/iv_post_img"
             android:layout_width="0dp"
             android:layout_height="350dp"
             android:padding="10dp"
-            app:imageUrl="@{postinfo.uri}"
-            app:layout_constraintTop_toBottomOf="@id/tb_post_detail"
+            app:imageUrl="@{postinfo.url}"
+            app:layout_constraintTop_toBottomOf="@id/ly_toolbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -38,7 +50,7 @@
             android:padding="10dp"
             android:textStyle="bold"
             android:textSize="17sp"
-            android:text="@={postinfo.title}"
+            android:text="@{postinfo.title}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_post_img"/>
@@ -48,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="@={postinfo.date}"
+            android:text="@{postinfo.date}"
             android:textSize="11sp"
             android:textColor="@color/gray"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="10dp"
-            android:text="@={postinfo.content}"
+            android:text="@{postinfo.content}"
             android:scrollbars="vertical"
             android:gravity="top"
             app:layout_constraintStart_toStartOf="parent"

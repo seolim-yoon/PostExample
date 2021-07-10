@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import com.example.postexample.R
 import com.example.postexample.databinding.FragmentUserInfoBinding
 import com.example.postexample.model.UserInfo
-import com.example.postexample.ui.base.BaseFragment
+import com.example.postexample.base.BaseFragment
 import com.example.postexample.ui.view.activity.LoginActivity
 import com.example.postexample.ui.viewmodel.UserState
 import com.example.postexample.util.LoginPreference

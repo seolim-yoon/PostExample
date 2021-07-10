@@ -2,21 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/item_home"
+        android:id="@+id/homeFragment"
         app:showAsAction="ifRoom"
         android:enabled="true"
         android:icon="@drawable/baseline_home_24"
         android:title="@string/title_home"/>
 
     <item
-        android:id="@+id/item_postadd"
+        android:id="@+id/postAddFragment"
         app:showAsAction="ifRoom"
         android:enabled="true"
         android:icon="@drawable/baseline_post_add_24"
         android:title="@string/title_post_add"/>
 
     <item
-        android:id="@+id/item_info"
+        android:id="@+id/userInfoFragment"
         app:showAsAction="ifRoom"
         android:enabled="true"
         android:icon="@drawable/baseline_person_24"

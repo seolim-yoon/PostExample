@@ -2,8 +2,6 @@ package com.example.postexample.ui.view.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color.TRANSPARENT
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -17,8 +15,7 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.postexample.R
 import com.example.postexample.databinding.FragmentPostAddBinding
-import com.example.postexample.ui.base.BaseFragment
-import com.example.postexample.ui.view.dialog.LoadingProgressDialog
+import com.example.postexample.base.BaseFragment
 import com.example.postexample.ui.viewmodel.ResultState
 
 class PostAddFragment: BaseFragment() {
