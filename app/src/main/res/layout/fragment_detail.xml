@@ -3,7 +3,7 @@
     <data>
         <variable
             name="postinfo"
-            type="com.example.postexample.model.DataModel.PostInfo" />
+            type="com.example.postexample.data.database.entity.Post" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

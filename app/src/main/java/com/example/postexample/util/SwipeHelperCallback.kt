@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
 import androidx.recyclerview.widget.RecyclerView
 import com.example.postexample.R
-import com.example.postexample.ui.view.adapter.PagingAdapter
+import com.example.postexample.ui.view.adapter.PostListPagingAdapter
 import kotlin.math.max
 import kotlin.math.min
 
@@ -65,7 +65,7 @@ class SwipeHelperCallback : ItemTouchHelper.Callback() {
         }
     }
 
-    private fun getView(viewHolder: RecyclerView.ViewHolder): View = (viewHolder as PagingAdapter.PagingItemViewHolder).itemView.findViewById(R.id.swipe_view)
+    private fun getView(viewHolder: RecyclerView.ViewHolder): View = (viewHolder as PostListPagingAdapter.PagingItemViewHolder).itemView.findViewById(R.id.swipe_view)
 
     override fun getSwipeEscapeVelocity(defaultValue: Float): Float = defaultValue * 10
 

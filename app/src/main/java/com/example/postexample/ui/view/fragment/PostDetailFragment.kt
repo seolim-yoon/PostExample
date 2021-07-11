@@ -8,9 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.example.postexample.R
 import com.example.postexample.base.BaseFragment
+import com.example.postexample.data.database.entity.Post
 import com.example.postexample.databinding.FragmentDetailBinding
-import com.example.postexample.model.DataModel
-import com.example.postexample.model.PostInfo
 
 class PostDetailFragment: BaseFragment() {
     private lateinit var binding: FragmentDetailBinding
@@ -26,7 +25,7 @@ class PostDetailFragment: BaseFragment() {
     }
 
     override fun initView() {
-        binding.postinfo = arguments?.getSerializable("PostInfo") as DataModel.PostInfo
+        binding.postinfo = arguments?.getSerializable("PostInfo") as Post
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()

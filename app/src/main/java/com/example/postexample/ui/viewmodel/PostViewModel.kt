@@ -7,15 +7,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.example.postexample.data.PostPagingSource
 import com.example.postexample.data.database.entity.Post
 import com.example.postexample.data.repository.PostRepository
-import com.example.postexample.model.DataModel
 import com.example.postexample.base.BaseViewModel
+import com.example.postexample.data.PostPagingSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.flow.map
 
 class PostViewModel(application: Application) : BaseViewModel(application) {
     private val postRepository = PostRepository(application)
@@ -35,14 +33,8 @@ class PostViewModel(application: Application) : BaseViewModel(application) {
     }
 
     val pager = Pager(PagingConfig(pageSize = 6)) {
-        Log.v("seolim", "allTodos : " + allPosts.value.toString())
-        PostPagingSource(allPosts.value ?: listOf())
-    }.flow.map {
-        it.map<DataModel> { DataModel.PostInfo(it.url, it.title, it.content, it.name, it.date, it.likenum) }
-//                .insertHeaderItem(DataModel.Header("HEADER"))
-//                .insertFooterItem(DataModel.Header("FOOTER"))
-
-    }.cachedIn(viewModelScope)
+        PostPagingSource(postRepository)
+    }.flow.cachedIn(viewModelScope)
 
     private fun getAllPosts() {
         addDisposable(postRepository.getAllPost()

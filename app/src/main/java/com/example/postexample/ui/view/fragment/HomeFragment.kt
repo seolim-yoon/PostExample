@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.postexample.R
 import com.example.postexample.databinding.FragmentHomeBinding
 import com.example.postexample.base.BaseFragment
-import com.example.postexample.ui.view.adapter.PagingAdapter
+import com.example.postexample.ui.view.adapter.PostListPagingAdapter
 import com.example.postexample.ui.viewmodel.ResultState
 import com.example.postexample.util.ItemDecoration
 import com.example.postexample.util.SwipeHelperCallback
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 class HomeFragment: BaseFragment() {
     private lateinit var binding: FragmentHomeBinding
     private val pagingAdapter by lazy {
-        PagingAdapter(context, { postInfo ->
+        PostListPagingAdapter(context, { postInfo ->
             val bundle = Bundle()
             bundle.putSerializable("PostInfo", postInfo)
             findNavController().navigate(R.id.action_homeFragment_to_postDetailFragment, bundle)
@@ -87,7 +87,6 @@ class HomeFragment: BaseFragment() {
         }
 
         lifecycleScope.launch {
-            delay(300)
             postViewModel.pager.collectLatest { pagingData ->
                 pagingAdapter.submitData(pagingData)
             }
